@@ -1,0 +1,51 @@
+<routes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Webapi:etc/webapi.xsd">
+    <route url="/V1/portmonepreauth/success" method="POST">
+        <service class="CodeCustom\PortmonePreAuthorization\Api\Response\PreAuthorization\SuccessInterface" method="success"/>
+        <resources>
+            <resource ref="anonymous"/>
+        </resources>
+    </route>
+    <route url="/V1/portmonepreauth/success" method="GET">
+        <service class="CodeCustom\PortmonePreAuthorization\Api\Response\PreAuthorization\SuccessInterface" method="success"/>
+        <resources>
+            <resource ref="anonymous"/>
+        </resources>
+    </route>
+    <route url="/V1/portmonepreauth/failure" method="POST">
+        <service class="CodeCustom\PortmonePreAuthorization\Api\Response\PreAuthorization\FailureInterface" method="failure"/>
+        <resources>
+            <resource ref="anonymous"/>
+        </resources>
+    </route>
+    <route url="/V1/portmonepreauth/failure" method="GET">
+        <service class="CodeCustom\PortmonePreAuthorization\Api\Response\PreAuthorization\FailureInterface" method="failure"/>
+        <resources>
+            <resource ref="anonymous"/>
+        </resources>
+    </route>
+    <route url="/V1/portmonepreauth/confirm" method="POST">
+        <service class="CodeCustom\PortmonePreAuthorization\Api\Response\PostAuthorization\ConfirmationInterface" method="confirm"/>
+        <resources>
+            <resource ref="anonymous"/>
+        </resources>
+    </route>
+    <route url="/V1/portmonepreauth/confirm" method="GET">
+        <service class="CodeCustom\PortmonePreAuthorization\Api\Response\PostAuthorization\ConfirmationInterface" method="confirm"/>
+        <resources>
+            <resource ref="anonymous"/>
+        </resources>
+    </route>
+    <route url="/V1/portmonepreauth/cancel" method="POST">
+        <service class="CodeCustom\PortmonePreAuthorization\Api\Response\PostAuthorization\CancellationInterface" method="cancel"/>
+        <resources>
+            <resource ref="anonymous"/>
+        </resources>
+    </route>
+    <route url="/V1/portmonepreauth/cancel" method="GET">
+        <service class="CodeCustom\PortmonePreAuthorization\Api\Response\PostAuthorization\CancellationInterface" method="cancel"/>
+        <resources>
+            <resource ref="anonymous"/>
+        </resources>
+    </route>
+</routes>

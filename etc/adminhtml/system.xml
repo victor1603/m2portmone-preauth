@@ -1,0 +1,105 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <section id="payment">
+            <group id="portmone_pre_authorization_payment" translate="label" type="text" sortOrder="-1" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Portmone Pre-authorization</label>
+                <comment>Portmone Pre-authorization payment</comment>
+                <field id="active" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Включить Portmone Pre-authorization payment</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="title" translate="label" type="text" sortOrder="2" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Название способа оплаты</label>
+                </field>
+                <field id="order_prefix" translate="label" type="text" sortOrder="3" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Prefix for order increment_id</label>
+                </field>
+                <field id="payee_id" translate="label" type="text" sortOrder="4" showInDefault="1" showInWebsite="1" showInStore="0" >
+                    <label>Идентификатор магазина Portmone(Payee ID)</label>
+                </field>
+                <field id="login" translate="label" type="text" sortOrder="4" showInDefault="1" showInWebsite="1" showInStore="0" >
+                    <label>Login</label>
+                </field>
+                <field id="password" translate="label" type="password" sortOrder="4" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Password</label>
+                </field>
+                <field id="order_status" translate="label" type="select" sortOrder="7" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Новый статус заказа</label>
+                    <source_model>Magento\Sales\Model\Config\Source\Order\Status\NewStatus</source_model>
+                </field>
+                <field id="payment_hold_complete_status" translate="label" type="select" sortOrder="8" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Статус заказа для подтверждения пост-авторизации</label>
+                    <source_model>Magento\Sales\Model\Config\Source\Order\Status</source_model>
+                </field>
+                <field id="payment_hold_cancel_status" translate="label" type="select" sortOrder="9" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Статус заказа для отмены пост-авторизации</label>
+                    <source_model>Magento\Sales\Model\Config\Source\Order\Status</source_model>
+                </field>
+                <field id="payment_success_order_status" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Статус заказа после успешной оплаты</label>
+                    <source_model>Magento\Sales\Model\Config\Source\Order\Status</source_model>
+                </field>
+                <field id="payment_error_order_status" translate="label" type="select" sortOrder="11" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Статус заказа после неудачной оплаты</label>
+                    <source_model>\Magento\Sales\Model\Config\Source\Order\Status</source_model>
+                </field>
+                <field id="allowed_carrier" translate="label" type="multiselect" sortOrder="12" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Допустимые методы доставки</label>
+                    <source_model>Magento\Shipping\Model\Config\Source\Allmethods</source_model>
+                </field>
+                <field id="description" translate="label" type="text" sortOrder="13" showInDefault="1" showInWebsite="1" showInStore="0" >
+                    <label>Description of order in payment system</label>
+                </field>
+                <field id="submit_url" translate="label" type="text" sortOrder="14" showInDefault="1" showInWebsite="1" showInStore="0" >
+                    <label>Submit URL</label>
+                </field>
+                <field id="language" translate="label" type="select" sortOrder="15" showInDefault="1" showInWebsite="1" showInStore="0" >
+                    <label>Language</label>
+                    <source_model>\CodeCustom\PortmonePreAuthorization\Model\System\Config\Source\Language</source_model>
+                </field>
+                <field id="success_url" translate="label" type="text" sortOrder="16" showInDefault="1" showInWebsite="1" showInStore="0" >
+                    <label>Success URL</label>
+                </field>
+                <field id="failure_url" translate="label" type="text" sortOrder="17" showInDefault="1" showInWebsite="1" showInStore="0" >
+                    <label>Failure URL</label>
+                </field>
+                <field id="front_url" translate="label" type="text" sortOrder="18" showInDefault="1" showInWebsite="1" showInStore="1" >
+                    <label>Front Redirect URL (PWA)</label>
+                    <comment>This link optionaly for any storeviews in any websites</comment>
+                </field>
+            </group>
+        </section>
+        <tab id="codecustom_tab" translate="label" sortOrder="1000001">
+            <label>Code custom</label>
+        </tab>
+        <section id="portmone_post_auth" translate="label" type="text" showInDefault="1" showInWebsite="1" showInStore="1">
+            <class>separator-top</class>
+            <label>Portmone pre-authorization</label>
+            <tab>codecustom_tab</tab>
+            <resource>CodeCustom_Payments::config</resource>
+            <group id="confirm_portmone" translate="label" type="text" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Confirmation pre-authorization order</label>
+                <field id="confirm_order_inc_id" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Order to confirm payment</label>
+                    <source_model>\CodeCustom\PortmonePreAuthorization\Model\System\Config\Source\ConfirmOrder</source_model>
+                    <comment>Choose order to confirm payment</comment>
+                </field>
+                <field id="confirm_button" translate="label button_label" sortOrder="2" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <frontend_model>CodeCustom\PortmonePreAuthorization\Block\System\Config\Confirm</frontend_model>
+                </field>
+            </group>
+            <group id="cancel_portmone" translate="label" type="text" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Cancelling pre-authorization order</label>
+                <field id="cancel_order_inc_id" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Order to cancel payment</label>
+                    <source_model>\CodeCustom\PortmonePreAuthorization\Model\System\Config\Source\CancelOrder</source_model>
+                    <comment>Choose order to cancel payment</comment>
+                </field>
+                <field id="cancel_button" translate="label button_label" sortOrder="2" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <frontend_model>CodeCustom\PortmonePreAuthorization\Block\System\Config\Cancel</frontend_model>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>
