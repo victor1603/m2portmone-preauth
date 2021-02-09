@@ -8,6 +8,9 @@ use Magento\Config\Block\System\Config\Form\Field;
 
 class Confirm extends Field
 {
+    /**
+     * @var string
+     */
     protected $_template = 'CodeCustom_PortmonePreAuthorization::system/config/confirm.phtml';
 
     /**

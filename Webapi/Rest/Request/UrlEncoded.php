@@ -14,8 +14,7 @@ class UrlEncoded implements DeserializerInterface
     protected $_appState;
 
     /**
-     * Text constructor.
-     *
+     * UrlEncoded constructor.
      * @param State $appState
      */
     public function __construct(State $appState)

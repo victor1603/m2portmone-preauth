@@ -12,6 +12,7 @@ use Magento\Store\Model\StoreManagerInterface;
 
 class Failure implements FailureInterface
 {
+
     /**
      * @var RequestInterface
      */
@@ -47,6 +48,15 @@ class Failure implements FailureInterface
      */
     public $history = null;
 
+    /**
+     * Failure constructor.
+     * @param RequestInterface $request
+     * @param ResponseInterface $response
+     * @param PortmonePreAuthorizationConfig $configHelper
+     * @param OrderRepositoryInterface $_orderRepository
+     * @param Order $orderModel
+     * @param StoreManagerInterface $storeManager
+     */
     public function __construct(
         RequestInterface $request,
         ResponseInterface $response,

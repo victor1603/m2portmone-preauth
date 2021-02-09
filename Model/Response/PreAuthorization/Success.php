@@ -14,6 +14,7 @@ use Magento\Framework\DB\Transaction;
 use Magento\Sales\Model\Order\Invoice;
 use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Sales\Model\Order\Payment\Transaction\BuilderInterface;
+use Magento\Sales\Api\TransactionRepositoryInterface;
 
 class Success implements SuccessInterface
 {
@@ -63,6 +64,11 @@ class Success implements SuccessInterface
     protected $_transactionBuilder;
 
     /**
+     * @var TransactionRepositoryInterface
+     */
+    protected $transactionRepository;
+
+    /**
      * @var Order
      */
     protected $orderModel;
@@ -72,6 +78,19 @@ class Success implements SuccessInterface
      */
     public $history = null;
 
+    /**
+     * Success constructor.
+     * @param RequestInterface $request
+     * @param ResponseInterface $response
+     * @param PortmonePreAuthorizationConfig $configHelper
+     * @param StoreManagerInterface $storeManager
+     * @param InvoiceService $_invoiceService
+     * @param Transaction $_transaction
+     * @param Invoice $_invoice
+     * @param OrderRepositoryInterface $_orderRepository
+     * @param BuilderInterface $_transactionBuilder
+     * @param Order $order
+     */
     public function __construct(
         RequestInterface $request,
         ResponseInterface $response,
@@ -82,7 +101,8 @@ class Success implements SuccessInterface
         Invoice $_invoice,
         OrderRepositoryInterface $_orderRepository,
         BuilderInterface $_transactionBuilder,
-        Order $order
+        Order $order,
+        TransactionRepositoryInterface $transactionRepository
     )
     {
         $this->request = $request;
@@ -95,6 +115,7 @@ class Success implements SuccessInterface
         $this->_orderRepository = $_orderRepository;
         $this->_transactionBuilder = $_transactionBuilder;
         $this->orderModel = $order;
+        $this->transactionRepository = $transactionRepository;
     }
 
     /**
@@ -166,6 +187,19 @@ class Success implements SuccessInterface
     public function createTransaction(Order $order = null, $paymentData = array())
     {
         try {
+
+            /**
+             * @var $transactionData Order\Payment\Transaction
+             */
+            if (isset($paymentData['id']) && $paymentData['id'] && $order->getPayment()->getEntityId()) {
+                $transactionData = $this->transactionRepository
+                    ->getByTransactionId($paymentData['id'], $order->getPayment()->getEntityId(), $order->getId());
+
+                if ($transactionData && $transactionData->getTxnId()) {
+                    return $transactionData->getTransactionId();
+                }
+            }
+
             $this->history[] = __("Creating transaction with ID: %1", $paymentData['id']);
             $payment = $order->getPayment();
             $payment->setLastTransId($paymentData['id']);

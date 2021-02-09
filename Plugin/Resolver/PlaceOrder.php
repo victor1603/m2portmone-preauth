@@ -39,6 +39,14 @@ class PlaceOrder
      */
     protected $portmoneHelper;
 
+    /**
+     * PlaceOrder constructor.
+     * @param PlaseOrderResolve $placeOrderResolve
+     * @param Order $orderModel
+     * @param CustomerRepositoryInterface $customerRepository
+     * @param LayoutFactory $layoutFactory
+     * @param PortmonePreAuthorizationConfig $portmoneHelper
+     */
     public function __construct(
         PlaseOrderResolve $placeOrderResolve,
         Order $orderModel,

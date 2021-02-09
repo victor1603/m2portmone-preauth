@@ -26,6 +26,11 @@ class Portmone
     private $_private_key;
     private $_server_response_code = null;
 
+    /**
+     * Portmone constructor.
+     * @param $public_key
+     * @param $private_key
+     */
     public function __construct($public_key, $private_key)
     {
         if (empty($public_key)) {
@@ -102,6 +107,10 @@ class Portmone
         return $params;
     }
 
+    /**
+     * @param $data
+     * @return string
+     */
     public function formData($data)
     {
         if (isset($data['isGuest']) && $data['isGuest'] == '1') {
@@ -131,6 +140,10 @@ class Portmone
         return $result;
     }
 
+    /**
+     * @param $data
+     * @return string
+     */
     public function form($data)
     {
         return '';

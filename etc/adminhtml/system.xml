@@ -100,6 +100,27 @@
                     <frontend_model>CodeCustom\PortmonePreAuthorization\Block\System\Config\Cancel</frontend_model>
                 </field>
             </group>
+            <group id="cron" translate="label" type="text" sortOrder="1" showInDefault="1" showInWebsite="0" showInStore="0">
+                <label>Cron settings</label>
+                <field id="condition_confirm" translate="label" type="text" sortOrder="1" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Cron condition for confirmation job</label>
+                    <comment>*(Minute 0 - 59) *(Hour 0 - 23) *(Day 1 - 31) *(Month 1 - 12) *(Day Sunday=0 or 7)</comment>
+                </field>
+                <field id="condition_cancel" translate="label" type="text" sortOrder="1" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Cron condition for cancellation job</label>
+                    <comment>*(Minute 0 - 59) *(Hour 0 - 23) *(Day 1 - 31) *(Month 1 - 12) *(Day Sunday=0 or 7)</comment>
+                </field>
+                <field id="portmone_cron_confirm_enable" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Enable cron job for confirm payment</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Enable/Disable execute in cron</comment>
+                </field>
+                <field id="portmone_cron_cancel_enable" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Enable cron job for cancel payment</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Enable/Disable execute in cron</comment>
+                </field>
+            </group>
         </section>
     </system>
 </config>

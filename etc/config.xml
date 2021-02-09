@@ -15,5 +15,11 @@
                 <action_url>https://www.portmone.com.ua/gateway/</action_url>
             </portmone_pre_authorization_payment>
         </payment>
+        <portmone_post_auth>
+            <cron>
+                <condition_confirm>* * * * *</condition_confirm>
+                <condition_cancel>* * * * *</condition_cancel>
+            </cron>
+        </portmone_post_auth>
     </default>
 </config>

@@ -9,6 +9,9 @@ use Magento\Backend\Block\Template\Context;
 class Cancel extends Field
 {
 
+    /**
+     * @var string
+     */
     protected $_template = 'CodeCustom_PortmonePreAuthorization::system/config/cancel.phtml';
 
     /**

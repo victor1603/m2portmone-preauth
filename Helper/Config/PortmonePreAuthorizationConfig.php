@@ -29,6 +29,9 @@ class PortmonePreAuthorizationConfig extends AbstractHelper
     const XML_PATH_POSTAUTH_CONFIRM_STATUS          = 'payment/portmone_pre_authorization_payment/payment_hold_complete_status';
     const XML_PATH_POSTAUTH_CANCEL_STATUS           = 'payment/portmone_pre_authorization_payment/payment_hold_cancel_status';
 
+    const XML_PATH_CONFIRM_CRON_ENABLE              = 'portmone_post_auth/cron/portmone_cron_confirm_enable';
+    const XML_PATH_CANCEL_CRON_ENABLE               = 'portmone_post_auth/cron/portmone_cron_cancel_enable';
+
     /**
      * @var StoreManagerInterface
      */
@@ -148,21 +151,34 @@ class PortmonePreAuthorizationConfig extends AbstractHelper
         return $this->getConfigValue(self::XML_PATH_LANGUAGE);
     }
 
+    /**
+     * @param $storeId
+     * @return mixed
+     */
     public function getFrontRedirectUrl($storeId = nul)
     {
         return $this->getConfigValue(self::XML_PATH_FRONT_URL, $storeId);
     }
 
+    /**
+     * @return mixed
+     */
     public function getNewOrderStatus()
     {
         return $this->getConfigValue(self::XML_PATH_PAYMENT_NEW_STATUS);
     }
 
+    /**
+     * @return mixed
+     */
     public function getOrderSuccessStatus()
     {
         return $this->getConfigValue(self::XML_PATH_PAYMENT_SUCCESS_STATUS);
     }
 
+    /**
+     * @return mixed
+     */
     public function getOrderFailureStatus()
     {
         return $this->getConfigValue(self::XML_PATH_PAYMENT_ERROR_STATUS);
@@ -185,22 +201,35 @@ class PortmonePreAuthorizationConfig extends AbstractHelper
         return $this->getConfigValue(self::XML_PATH_ALLOWED_CARRIERS);
     }
 
+    /**
+     * @return mixed|string
+     */
     public function getOrderPrefix()
     {
         $value = $this->getConfigValue(self::XML_PATH_ORDER_PREFIX);
         return $value ? $value : "";
     }
 
+    /**
+     * @return mixed
+     */
     public function getPostAuthConfirmStatus()
     {
         return $this->getConfigValue(self::XML_PATH_POSTAUTH_CONFIRM_STATUS);
     }
 
+    /**
+     * @return mixed
+     */
     public function getPostAuthCancelStatus()
     {
         return $this->getConfigValue(self::XML_PATH_POSTAUTH_CANCEL_STATUS);
     }
 
+    /**
+     * @param null $orderId
+     * @return mixed|string|string[]|null
+     */
     public function parseOrderId($orderId = null)
     {
         $prefix = $this->getOrderPrefix();
@@ -208,6 +237,22 @@ class PortmonePreAuthorizationConfig extends AbstractHelper
             return str_replace($prefix, '', $orderId);
         }
         return $orderId;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function isCronConfirmEnable()
+    {
+        return $this->getConfigValue(self::XML_PATH_CONFIRM_CRON_ENABLE);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function isCronCancelEnable()
+    {
+        return $this->getConfigValue(self::XML_PATH_CANCEL_CRON_ENABLE);
     }
 
 }

@@ -76,18 +76,21 @@ class Confirmation implements ConfirmationInterface
             $order = $this->orderModel->loadByIncrementId($orderIncrementId);
             if ($order->getStatus() == $this->configHelper->getPostAuthConfirmStatus()) {
                 $result = $this->transport->sendRequest($order, Transport::CONFIRM_METHOD);
-                $transactionId = isset($result['shop_bill_id']) ? $result['shop_bill_id'] : null;
-                $invoice = $this->successResponse->createInvoice($order, $transactionId, 2);
-                if ($invoice) {
-                    $this->successResponse->createTransaction(
-                        $order,
-                        [
-                            'id' => $transactionId,
-                            'order_id' => $order->getIncrementId()
-                        ]
-                    );
+                if ($result && isset($result['status']) && $result['status'] == Transport::CONFIRM_STATUS) {
+                    $transactionId = isset($result['shop_bill_id']) ? $result['shop_bill_id'] : null;
+                    $invoice = $this->successResponse->createInvoice($order, $transactionId, 2);
+                    if ($invoice) {
+                        $this->successResponse->createTransaction(
+                            $order,
+                            [
+                                'id' => $transactionId,
+                                'order_id' => $order->getIncrementId()
+                            ]
+                        );
+                    }
+                    $this->successResponse->changeOrder($this->configHelper->getOrderSuccessStatus(), $order);
                 }
-                $this->successResponse->changeOrder($this->configHelper->getOrderSuccessStatus(), $order);
+
             } else {
                 $result['error_code'] = 1;
                 $result['error_message'] = __('Error status on this order already changed');

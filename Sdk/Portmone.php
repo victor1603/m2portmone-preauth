@@ -13,6 +13,10 @@ class Portmone extends PortmoneCoreSdk
      */
     protected $_helper;
 
+    /**
+     * Portmone constructor.
+     * @param PortmonePreAuthorizationConfig $_helper
+     */
     public function __construct(
         PortmonePreAuthorizationConfig $_helper
     )

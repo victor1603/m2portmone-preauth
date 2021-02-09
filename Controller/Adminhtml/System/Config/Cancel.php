@@ -20,6 +20,12 @@ class Cancel extends Action
      */
     protected $canellation;
 
+    /**
+     * Cancel constructor.
+     * @param Context $context
+     * @param JsonFactory $jsonFactory
+     * @param Cancellation $cancellation
+     */
     public function __construct(
         Context $context,
         JsonFactory $jsonFactory,
@@ -31,6 +37,9 @@ class Cancel extends Action
         parent::__construct($context);
     }
 
+    /**
+     * @return \Magento\Framework\App\ResponseInterface|\Magento\Framework\Controller\Result\Json|\Magento\Framework\Controller\ResultInterface
+     */
     public function execute()
     {
         $result = $this->jsonFactory->create();

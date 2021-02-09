@@ -25,8 +25,18 @@ class Cancellation implements CancellationInterface
      */
     protected $configHelper;
 
+    /**
+     * @var Failure
+     */
     protected $failureResponse;
 
+    /**
+     * Cancellation constructor.
+     * @param Transport $transport
+     * @param Order $orderModel
+     * @param PortmonePreAuthorizationConfig $configHelper
+     * @param Failure $failureResponse
+     */
     public function __construct(
         Transport $transport,
         Order $orderModel,
@@ -51,11 +61,13 @@ class Cancellation implements CancellationInterface
             $order = $this->orderModel->loadByIncrementId($orderIncrementId);
             if ($order->getStatus() == $this->configHelper->getPostAuthCancelStatus()) {
                 $result = $this->transport->sendRequest($order, Transport::REJECT_METHOD);
-                $this->failureResponse->changeOrder(
-                    $this->configHelper->getOrderFailureStatus(),
-                    $order,
-                    [__("Payment from Portmane post-authorized, order: %1 status: %2", $order->getIncrementId(), 'canceled')]
-                );
+                if ($result && isset($result['status']) && $result['status'] == Transport::REJECT_STATUS) {
+                    $this->failureResponse->changeOrder(
+                        $this->configHelper->getOrderFailureStatus(),
+                        $order,
+                        [__("Payment from Portmane post-authorized, order: %1 status: %2", $order->getIncrementId(), 'canceled')]
+                    );
+                }
             } else {
                 $result['error_code'] = 1;
                 $result['error_message'] = __('Error status on this order already changed');

@@ -20,6 +20,12 @@ class Confirm extends Action
      */
     protected $confirmation;
 
+    /**
+     * Confirm constructor.
+     * @param Context $context
+     * @param JsonFactory $jsonFactory
+     * @param Confirmation $confirmation
+     */
     public function __construct(
         Context $context,
         JsonFactory $jsonFactory,
@@ -31,6 +37,9 @@ class Confirm extends Action
         parent::__construct($context);
     }
 
+    /**
+     * @return \Magento\Framework\App\ResponseInterface|\Magento\Framework\Controller\Result\Json|\Magento\Framework\Controller\ResultInterface
+     */
     public function execute()
     {
         $result = $this->jsonFactory->create();
