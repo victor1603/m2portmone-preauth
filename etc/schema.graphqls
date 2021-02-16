@@ -18,6 +18,32 @@ directive @doc(description: String="") on QUERY
 directive @resolver(class: String) on FIELD_DEFINITION
 directive @cache(cacheable: Boolean) on FIELD_DEFINITION
 
+type Query {
+    getorder(order_id: String!): OrderViewOutput
+    @resolver(class: "\\CodeCustom\\PortmonePreAuthorization\\Model\\Resolver\\OrderView")
+}
+
+type OrderViewOutput {
+    increment_id: String
+    grand_total: Float
+    currency_code: String
+    created_at: String
+    shipping_city: String
+    shipping_street: String
+    payment: String
+    customer_firstname: String
+    customer_lastname: String
+    customer_telephone: String
+    items: [OrderProductItems]
+}
+
+type OrderProductItems {
+    sku: String
+    image: String
+    name: String
+    qty: Int
+    price: Float
+}
 
 
 type Order {
