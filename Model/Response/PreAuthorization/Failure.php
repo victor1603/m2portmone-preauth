@@ -80,6 +80,7 @@ class Failure implements FailureInterface
      */
     public function failure()
     {
+        $error = false;
         $params = $this->request->getParams();
         $orderId = isset($params['SHOPORDERNUMBER']) ? $params['SHOPORDERNUMBER'] : null;
         $storeId = null;
@@ -95,8 +96,13 @@ class Failure implements FailureInterface
             $error = true;
         }
 
-        if ($this->configHelper->getFrontRedirectUrl($storeId)) {
-            $this->response->setRedirect($this->configHelper->getFrontRedirectUrl($storeId))->sendResponse();
+        $redirectPage = $this->configHelper->getFrontRedirectUrl($storeId);
+        if (strpos($redirectPage, 'order_id=') !== false && !$error) {
+            $redirectPage .= $order->getIncrementId();
+        }
+
+        if ($redirectPage) {
+            $this->response->setRedirect($redirectPage)->sendResponse();
         } else {
             $this->response->setRedirect($this->storeManager->getStore()->getBaseUrl() . 'checkout/onepage/success/')->sendResponse();
         }

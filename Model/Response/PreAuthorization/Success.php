@@ -124,6 +124,7 @@ class Success implements SuccessInterface
      */
     public function success()
     {
+        $error = false;
         $params = $this->request->getParams();
         $orderId = isset($params['SHOPORDERNUMBER']) ? $this->configHelper->parseOrderId($params['SHOPORDERNUMBER']) : null;
         $result = isset($params['RESULT']) ? $params['RESULT'] : null;
@@ -170,8 +171,12 @@ class Success implements SuccessInterface
         /**
          * Make redirect to front page
          */
-        if ($this->configHelper->getFrontRedirectUrl($storeId)) {
-            $this->response->setRedirect($this->configHelper->getFrontRedirectUrl($storeId))->sendResponse();
+        $redirectPage = $this->configHelper->getFrontRedirectUrl($storeId);
+        if (strpos($redirectPage, 'order_id=') !== false && !$error) {
+            $redirectPage .= $order->getIncrementId();
+        }
+        if ($redirectPage) {
+            $this->response->setRedirect($redirectPage)->sendResponse();
         } else {
             $this->response->setRedirect($this->storeManager->getStore()->getBaseUrl() . 'checkout/onepage/success/')->sendResponse();
         }

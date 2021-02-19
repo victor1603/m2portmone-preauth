@@ -66,7 +66,7 @@
                 </field>
                 <field id="front_url" translate="label" type="text" sortOrder="18" showInDefault="1" showInWebsite="1" showInStore="1" >
                     <label>Front Redirect URL (PWA)</label>
-                    <comment>This link optionaly for any storeviews in any websites</comment>
+                    <comment>This link optionaly for any storeviews in any websites. Add order_id to front derirect, example: https://front.url/success?order_id=</comment>
                 </field>
             </group>
         </section>

@@ -8,26 +8,57 @@ use Magento\Framework\GraphQl\Query\ResolverInterface;
 use Magento\Framework\GraphQl\Schema\Type\ResolveInfo;
 use Magento\Sales\Model\Order;
 use Magento\Framework\GraphQl\Exception\GraphQlAuthorizationException;
+use Magento\Catalog\Helper\Image;
 
 class OrderView implements ResolverInterface
 {
+    /**
+     * @var Order
+     */
     protected $order;
 
+    /**
+     * @var Image
+     */
+    protected $imageHelper;
+
+    /**
+     * OrderView constructor.
+     * @param Order $order
+     * @param Image $imageHelper
+     */
     public function __construct(
-        Order $order
+        Order $order,
+        Image $imageHelper
     )
     {
         $this->order = $order;
+        $this->imageHelper = $imageHelper;
     }
 
+    /**
+     * @param Field $field
+     * @param \Magento\Framework\GraphQl\Query\Resolver\ContextInterface $context
+     * @param ResolveInfo $info
+     * @param array|null $value
+     * @param array|null $args
+     * @return array|\Magento\Framework\GraphQl\Query\Resolver\Value|mixed
+     * @throws GraphQlAuthorizationException
+     * @throws GraphQlNoSuchEntityException
+     */
     public function resolve(Field $field, $context, ResolveInfo $info, array $value = null, array $args = null)
     {
         if (false === $context->getExtensionAttributes()->getIsCustomer()) {
-            //throw new GraphQlAuthorizationException(__('The current customer isn\'t authorized.'));
+            throw new GraphQlAuthorizationException(__('The current customer isn\'t authorized.'));
         }
 
         try {
             $order = $this->order->loadByIncrementId($args['order_id']);
+
+            if ($order->getCustomerId() != $context->getUserId()) {
+                throw new GraphQlAuthorizationException(__('This user cant view order with id %1.', $args['order_id']));
+            }
+
             $result = $this->getData($order);
         } catch (\Exception $exception) {
             throw new GraphQlNoSuchEntityException(__($exception->getMessage()));
@@ -74,9 +105,13 @@ class OrderView implements ResolverInterface
         }
 
         foreach ($order->getItems() as $item) {
+            $product = $item->getProduct();
+            $image_url = $this->imageHelper->init($product, 'small_image')
+                ->setImageFile($product->getSmallImage())
+                ->resize(200)->getUrl();
             $result[] = [
                 'sku' => $item->getSku(),
-                'image' => '',
+                'image' => $image_url,
                 'name' => $item->getName(),
                 'qty' => $item->getQtyOrdered(),
                 'price' => $item->getPrice()
