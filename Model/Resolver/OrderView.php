@@ -139,6 +139,6 @@ class OrderView implements ResolverInterface
         if (!$date) {
             return null;
         }
-        return $this->timezone->date($date)->format('Y-m-d H:i:s');
+        return $this->timezone->date(new \DateTime($date))->format('Y-m-d H:i:s');
     }
 }
