@@ -9,6 +9,7 @@ use Magento\Framework\GraphQl\Schema\Type\ResolveInfo;
 use Magento\Sales\Model\Order;
 use Magento\Framework\GraphQl\Exception\GraphQlAuthorizationException;
 use Magento\Catalog\Helper\Image;
+use Magento\Framework\Stdlib\DateTime\TimezoneInterface;
 
 class OrderView implements ResolverInterface
 {
@@ -23,17 +24,24 @@ class OrderView implements ResolverInterface
     protected $imageHelper;
 
     /**
+     * @var TimezoneInterface
+     */
+    protected $timezone;
+
+    /**
      * OrderView constructor.
      * @param Order $order
      * @param Image $imageHelper
      */
     public function __construct(
         Order $order,
-        Image $imageHelper
+        Image $imageHelper,
+        TimezoneInterface $timezone
     )
     {
         $this->order = $order;
         $this->imageHelper = $imageHelper;
+        $this->timezone = $timezone;
     }
 
     /**
@@ -80,7 +88,7 @@ class OrderView implements ResolverInterface
             'increment_id' => $order->getIncrementId(),
             'grand_total' => $order->getGrandTotal(),
             'currency_code' => $order->getOrderCurrencyCode(),
-            'created_at' => $order->getCreatedAt(),
+            'created_at' => $this->getCreatedAt($order->getCreatedAt()),
             'shipping_city' => $order->getShippingAddress()->getCity(),
             'shipping_street' => is_array($order->getShippingAddress()->getStreet())
                 && isset($order->getShippingAddress()->getStreet()[0])
@@ -119,5 +127,18 @@ class OrderView implements ResolverInterface
         }
 
         return $result;
+    }
+
+    /**
+     * Convert order created time to needed timezone
+     * @param null $date
+     * @return string|null
+     */
+    public function getCreatedAt($date = null)
+    {
+        if (!$date) {
+            return null;
+        }
+        return $this->timezone->date($date)->format('Y-m-d H:i:s');
     }
 }
