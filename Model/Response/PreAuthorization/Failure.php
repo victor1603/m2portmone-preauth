@@ -9,6 +9,8 @@ use CodeCustom\PortmonePreAuthorization\Helper\Config\PortmonePreAuthorizationCo
 use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Sales\Model\Order;
 use Magento\Store\Model\StoreManagerInterface;
+use CodeCustom\PortmonePreAuthorization\Helper\Logger;
+use Magento\Framework\Stdlib\DateTime\TimezoneInterface;
 
 class Failure implements FailureInterface
 {
@@ -49,6 +51,16 @@ class Failure implements FailureInterface
     public $history = null;
 
     /**
+     * @var Logger
+     */
+    protected $logger;
+
+    /**
+     * @var TimezoneInterface
+     */
+    protected $timezone;
+
+    /**
      * Failure constructor.
      * @param RequestInterface $request
      * @param ResponseInterface $response
@@ -63,7 +75,9 @@ class Failure implements FailureInterface
         PortmonePreAuthorizationConfig $configHelper,
         OrderRepositoryInterface $_orderRepository,
         Order $orderModel,
-        StoreManagerInterface $storeManager
+        StoreManagerInterface $storeManager,
+        Logger $logger,
+        TimezoneInterface $timezone
     )
     {
         $this->response = $response;
@@ -72,6 +86,8 @@ class Failure implements FailureInterface
         $this->_orderRepository = $_orderRepository;
         $this->orderModel = $orderModel;
         $this->storeManager = $storeManager;
+        $this->logger = $logger;
+        $this->timezone = $timezone;
     }
 
     /**
@@ -82,7 +98,7 @@ class Failure implements FailureInterface
     {
         $error = false;
         $params = $this->request->getParams();
-        $orderId = isset($params['SHOPORDERNUMBER']) ? $params['SHOPORDERNUMBER'] : null;
+        $orderId = isset($params['SHOPORDERNUMBER']) ? $this->configHelper->parseOrderId($params['SHOPORDERNUMBER']) : null;
         $storeId = null;
 
         try {
@@ -91,6 +107,7 @@ class Failure implements FailureInterface
                 $storeId = $order->getStoreId();
                 $this->history[] = __("Payment from Portmane pre-authorized, order: %1 status: %2", $order->getIncrementId(), 'failure');
                 $this->changeOrder($this->configHelper->getOrderFailureStatus(), $order);
+                $this->createLogger($order, $params);
             }
         } catch (\Exception $exception) {
             $error = true;
@@ -134,6 +151,43 @@ class Failure implements FailureInterface
         }
         $this->_orderRepository->save($order);
         return true;
+    }
+
+    /**
+     * @var Order $order
+     * @param null $order
+     * @throws \Magento\Framework\Exception\FileSystemException
+     */
+    private function createLogger($order = null, $data = [])
+    {
+        $this->logger->create($order->getIncrementId()
+            . '_pre_fail_' . $this->getCreatedAt($order->getCreatedAt()),
+            'portmone');
+        $this->logger->log([
+            'order_id' => $order->getIncrementId(),
+            'grand_total' => $order->getGrandTotal(),
+            'status' => 'Failure preauthorization',
+            'time' => $this->getCreatedAt(date('Y-m-d H:i:s')),
+            'transaction_id' => isset($data['SHOPBILLID']) ? $data['SHOPBILLID'] : '',
+            'SHOPBILLID' => isset($data['SHOPBILLID']) ? $data['SHOPBILLID'] : '',
+            'APPROVALCODE' => isset($data['APPROVALCODE']) ? $data['APPROVALCODE'] : '',
+            'PORTMONE_RESULT' => isset($data['RESULT']) ? $data['RESULT'] : '',
+            'CARD_MASK' => isset($data['CARD_MASK']) ? $data['CARD_MASK'] : '',
+            'BILL_AMOUNT' => isset($data['BILL_AMOUNT']) ? $data['BILL_AMOUNT'] : '',
+        ]);
+    }
+
+    /**
+     * Convert time to needed timezone
+     * @param null $date
+     * @return string|null
+     */
+    public function getCreatedAt($date = null)
+    {
+        if (!$date) {
+            return null;
+        }
+        return $this->timezone->date(new \DateTime($date))->format('Y-m-d H:i:s');
     }
 
 }

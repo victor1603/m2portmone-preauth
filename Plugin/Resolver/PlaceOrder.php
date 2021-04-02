@@ -11,6 +11,8 @@ use CodeCustom\PortmonePreAuthorization\Model\PortmonePreAuthorization;
 use Magento\Customer\Api\CustomerRepositoryInterface;
 use Magento\Framework\View\LayoutFactory;
 use CodeCustom\PortmonePreAuthorization\Helper\Config\PortmonePreAuthorizationConfig;
+use CodeCustom\PortmonePreAuthorization\Helper\Logger;
+use Magento\Framework\Stdlib\DateTime\TimezoneInterface;
 
 class PlaceOrder
 {
@@ -40,6 +42,16 @@ class PlaceOrder
     protected $portmoneHelper;
 
     /**
+     * @var Logger
+     */
+    protected $logger;
+
+    /**
+     * @var TimezoneInterface
+     */
+    protected $timezone;
+
+    /**
      * PlaceOrder constructor.
      * @param PlaseOrderResolve $placeOrderResolve
      * @param Order $orderModel
@@ -52,7 +64,9 @@ class PlaceOrder
         Order $orderModel,
         CustomerRepositoryInterface $customerRepository,
         LayoutFactory $layoutFactory,
-        PortmonePreAuthorizationConfig $portmoneHelper
+        PortmonePreAuthorizationConfig $portmoneHelper,
+        Logger $logger,
+        TimezoneInterface $timezone
     )
     {
         $this->placeOrderResolve = $placeOrderResolve;
@@ -60,6 +74,8 @@ class PlaceOrder
         $this->customerRepository = $customerRepository;
         $this->layoutFactory = $layoutFactory;
         $this->portmoneHelper = $portmoneHelper;
+        $this->logger = $logger;
+        $this->timezone = $timezone;
     }
 
     /**
@@ -96,6 +112,7 @@ class PlaceOrder
                 $resolvedValue['order']['payment_extension_data']['redirect_url'] = $this->portmoneHelper->getSubmitUrl();
                 $resolvedValue['order']['payment_extension_data']['html_data'] = $extensionData;
                 $resolvedValue['order']['payment_extension_data']['payment_method'] = $order->getPayment()->getMethod();
+                $this->createLogger($order);
             }
         } catch (\Exception $e) {
             throw new \Exception(__($e->getMessage()));
@@ -121,6 +138,49 @@ class PlaceOrder
         $html = $formBlock->getHtml();
 
         return $html;
+    }
+
+    /**
+     * @var Order $order
+     * @param null $order
+     * @throws \Magento\Framework\Exception\FileSystemException
+     */
+    private function createLogger($order = null)
+    {
+        if ($order && $order->getId()) {
+            $this->logger->create($order->getIncrementId()
+                . '_create_' . $this->getCreatedAt($order->getCreatedAt()),
+                'portmone');
+            $this->logger->log([
+                'order_id' => $order->getIncrementId(),
+                'grand_total' => $order->getGrandTotal(),
+                'grand_total' => $order->getGrandTotal(),
+                'currency_code' => $order->getOrderCurrencyCode(),
+                'shipping_city' => $order->getShippingAddress()->getCity(),
+                'shipping_street' => is_array($order->getShippingAddress()->getStreet())
+                && isset($order->getShippingAddress()->getStreet()[0])
+                    ? $order->getShippingAddress()->getStreet()[0]
+                    : "",
+                'payment' => $order->getPayment()->getMethodInstance()->getTitle(),
+                'customer_firstname' => $order->getShippingAddress()->getFirstname(),
+                'customer_lastname' => $order->getShippingAddress()->getLastname(),
+                'customer_telephone' => $order->getShippingAddress()->getTelephone(),
+                'customer_email' => $order->getShippingAddress()->getEmail(),
+            ]);
+        }
+    }
+
+    /**
+     * Convert order created time to needed timezone
+     * @param null $date
+     * @return string|null
+     */
+    public function getCreatedAt($date = null)
+    {
+        if (!$date) {
+            return null;
+        }
+        return $this->timezone->date(new \DateTime($date))->format('Y-m-d H:i:s');
     }
 
 }

@@ -15,6 +15,8 @@ use Magento\Sales\Model\Order\Invoice;
 use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Sales\Model\Order\Payment\Transaction\BuilderInterface;
 use Magento\Sales\Api\TransactionRepositoryInterface;
+use CodeCustom\PortmonePreAuthorization\Helper\Logger;
+use Magento\Framework\Stdlib\DateTime\TimezoneInterface;
 
 class Success implements SuccessInterface
 {
@@ -79,6 +81,16 @@ class Success implements SuccessInterface
     public $history = null;
 
     /**
+     * @var Logger
+     */
+    protected $logger;
+
+    /**
+     * @var TimezoneInterface
+     */
+    protected $timezone;
+
+    /**
      * Success constructor.
      * @param RequestInterface $request
      * @param ResponseInterface $response
@@ -102,7 +114,9 @@ class Success implements SuccessInterface
         OrderRepositoryInterface $_orderRepository,
         BuilderInterface $_transactionBuilder,
         Order $order,
-        TransactionRepositoryInterface $transactionRepository
+        TransactionRepositoryInterface $transactionRepository,
+        Logger $logger,
+        TimezoneInterface $timezone
     )
     {
         $this->request = $request;
@@ -116,6 +130,8 @@ class Success implements SuccessInterface
         $this->_transactionBuilder = $_transactionBuilder;
         $this->orderModel = $order;
         $this->transactionRepository = $transactionRepository;
+        $this->logger = $logger;
+        $this->timezone = $timezone;
     }
 
     /**
@@ -162,6 +178,7 @@ class Success implements SuccessInterface
                     );
                 }
                 $this->changeOrder($this->configHelper->getNewOrderStatus(), $order);
+                $this->createLogger($order, $params);
             }
 
         } catch (\Exception $exception) {
@@ -315,4 +332,40 @@ class Success implements SuccessInterface
         return true;
     }
 
+    /**
+     * @var Order $order
+     * @param null $order
+     * @throws \Magento\Framework\Exception\FileSystemException
+     */
+    private function createLogger($order = null, $data = [])
+    {
+        $this->logger->create($order->getIncrementId()
+            . '_pre_success_' . $this->getCreatedAt($order->getCreatedAt()),
+            'portmone');
+        $this->logger->log([
+            'order_id' => $order->getIncrementId(),
+            'grand_total' => $order->getGrandTotal(),
+            'status' => 'Success preauthorization',
+            'time' => $this->getCreatedAt(date('Y-m-d H:i:s')),
+            'transaction_id' => isset($data['SHOPBILLID']) ? $data['SHOPBILLID'] : '',
+            'SHOPBILLID' => isset($data['SHOPBILLID']) ? $data['SHOPBILLID'] : '',
+            'APPROVALCODE' => isset($data['APPROVALCODE']) ? $data['APPROVALCODE'] : '',
+            'PORTMONE_RESULT' => isset($data['RESULT']) ? $data['RESULT'] : '',
+            'CARD_MASK' => isset($data['CARD_MASK']) ? $data['CARD_MASK'] : '',
+            'BILL_AMOUNT' => isset($data['BILL_AMOUNT']) ? $data['BILL_AMOUNT'] : '',
+        ]);
+    }
+
+    /**
+     * Convert time to needed timezone
+     * @param null $date
+     * @return string|null
+     */
+    public function getCreatedAt($date = null)
+    {
+        if (!$date) {
+            return null;
+        }
+        return $this->timezone->date(new \DateTime($date))->format('Y-m-d H:i:s');
+    }
 }

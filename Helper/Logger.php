@@ -5,9 +5,13 @@ namespace CodeCustom\PortmonePreAuthorization\Helper;
 use Psr\Log\LoggerInterface;
 use Magento\Framework\App\Filesystem\DirectoryList;
 use Magento\Framework\Filesystem\Io\File;
+use Laminas\Log\Writer\Stream;
+use Laminas\Log\Logger as LaminasLogger;
 
 class Logger
 {
+
+    const TYPE = 'code_custom';
 
     /**
      * @var LoggerInterface
@@ -44,6 +48,12 @@ class Logger
      */
     public $logPath = [];
 
+    /**
+     * Logger constructor.
+     * @param LoggerInterface $logger
+     * @param DirectoryList $directoryList
+     * @param File $file
+     */
     public function __construct(
         LoggerInterface $logger,
         DirectoryList $directoryList,
@@ -54,37 +64,43 @@ class Logger
         $this->file = $file;
     }
 
-    public function create($log_name = 'log_file', $fileFolder = '', $type = 'customLogs')
+    /**
+     * @param string $log_name
+     * @param string $fileFolder
+     * @return \CodeCustom\PortmonePreAuthorization\Helper\Logger
+     * @throws \Magento\Framework\Exception\FileSystemException
+     */
+    public function create($log_name = 'log_file', $fileFolder = '')
     {
-        $fileFolder = $fileFolder ? '/' . $fileFolder : '';
-        $this->logDateFolder = '/' . date('Y') . '/' . date('m') . '/' . date('d');
-        $this->logFolder = '/log/' . $type . $this->logDateFolder . $fileFolder;
-
-        $pubSmlnkFolred = 'log-smlnk' . $this->logDateFolder;
+        $fileFolder = $fileFolder ? '/' . $fileFolder: '';
+        $logDateFolder = '/' . date('Y') . '/' . date('m') . '/' . date('d');
+        $logFolder = '/log/' . self::TYPE . $fileFolder . $logDateFolder;
         $logfile = '/' . $log_name . '_' . date('H_i_s');
-        $this->file->mkdir($this->directoryList->getPath('var') . $this->logFolder, 0775);
-        $writer = new \Laminas\Log\Writer\Stream(BP . '/var' . $this->logFolder . $logfile . '.log');
-        $logger = new \Laminas\Log\Logger();
+        $this->file->mkdir($this->directoryList->getPath('var') . $logFolder, 0775);
+        $writer = new Stream(BP . '/var' . $logFolder . $logfile . '.log');
+        $logger = new LaminasLogger();
         $logger->addWriter($writer);
         $this->customLogger = $logger;
-        $this->logPath[] = '/' . $pubSmlnkFolred . $logfile . '.log';
+        $this->logPath[] = '/var' . $logFolder . $logfile . '.log';
         return $logger;
     }
 
-    public function log($messageData)
+    /**
+     * @param $messageData
+     * @return array|false
+     */
+    public function log($messageData = null)
     {
-        if (!$this->customLogger) {
+        if (!$this->customLogger || !$messageData) {
             return false;
         }
 
         if (is_array($messageData) || is_object($messageData)) {
-            $this->customLogger->info('Log DATA:');
             foreach ($messageData as $key => $value) {
-                $this->customLogger->info('Key: ' . $key . ' Value: ' . $value);
+                $this->customLogger->info($key . ': ' . $value);
             }
-            $this->customLogger->info('Log DATA end');
         } elseif ($messageData) {
-            $this->customLogger->info('Log info: ' . $messageData);
+            $this->customLogger->info('Log: ' . $messageData);
         }
 
         return $this->logPath;

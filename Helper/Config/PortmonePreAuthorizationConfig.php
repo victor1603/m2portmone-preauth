@@ -108,7 +108,7 @@ class PortmonePreAuthorizationConfig extends AbstractHelper
      */
     public function getFailureUrl()
     {
-        return $this->getBaseurl() . 'rest/V1/portmonepreauth/success';//$this->getBaseurl() . $this->getConfigValue(self::XML_PATH_FAILURE_URL);
+        return $this->getBaseurl() . 'rest/V1/portmonepreauth/failure';//$this->getBaseurl() . $this->getConfigValue(self::XML_PATH_FAILURE_URL);
     }
 
     /**
