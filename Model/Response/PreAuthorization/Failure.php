@@ -106,7 +106,7 @@ class Failure implements FailureInterface
                 $order = $this->orderModel->loadByIncrementId($orderId);
                 $storeId = $order->getStoreId();
                 $this->history[] = __("Payment from Portmane pre-authorized, order: %1 status: %2", $order->getIncrementId(), 'failure');
-                $this->changeOrder($this->configHelper->getOrderFailureStatus(), $order);
+                $this->changeOrder($this->configHelper->getHoldCancelStatus(), $order);
                 $this->createLogger($order, $params);
             }
         } catch (\Exception $exception) {
@@ -139,16 +139,18 @@ class Failure implements FailureInterface
             $history += $this->history;
         }
 
+        if ($state) {
+            //$order->setState($state);
+            $order->setStatus($state);
+
+        }
+
         if (count($history)) {
             $order->addStatusHistoryComment(implode(' ', $history))
                 ->setIsCustomerNotified(true);
         }
 
-        if ($state) {
-            //$order->setState($state);
-            $order->setStatus($state);
-            $order->save();
-        }
+        $order->save();
         $this->_orderRepository->save($order);
         return true;
     }

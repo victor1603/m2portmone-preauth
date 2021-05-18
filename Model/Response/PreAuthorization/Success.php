@@ -177,7 +177,7 @@ class Success implements SuccessInterface
                         ]
                     );
                 }
-                $this->changeOrder($this->configHelper->getNewOrderStatus(), $order);
+                $this->changeOrder($this->configHelper->getHoldSuccessStatus(), $order);
                 $this->createLogger($order, $params);
             }
 
@@ -318,16 +318,17 @@ class Success implements SuccessInterface
             $history += $this->history;
         }
 
+        if ($state) {
+            //$order->setState($state);
+            $order->setStatus($state);
+        }
+
         if (count($history)) {
             $order->addStatusHistoryComment(implode(' ', $history))
                 ->setIsCustomerNotified(true);
         }
 
-        if ($state) {
-            //$order->setState($state);
-            $order->setStatus($state);
-            $order->save();
-        }
+        $order->save();
         $this->_orderRepository->save($order);
         return true;
     }

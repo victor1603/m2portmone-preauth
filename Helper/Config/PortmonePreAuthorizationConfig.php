@@ -15,6 +15,8 @@ class PortmonePreAuthorizationConfig extends AbstractHelper
     const XML_PATH_LOGIN                            = 'payment/portmone_pre_authorization_payment/login';
     const XML_PATH_PASSWORD                         = 'payment/portmone_pre_authorization_payment/password';
     const XML_PATH_PAYMENT_NEW_STATUS               = 'payment/portmone_pre_authorization_payment/order_status';
+    const XML_PATH_SUCCESS_STATUS                   = 'payment/portmone_pre_authorization_payment/order_status_success_hold';
+    const XML_PATH_CANCEL_STATUS                    = 'payment/portmone_pre_authorization_payment/order_status_cancel_hold';
     const XML_PATH_PAYMENT_SUCCESS_STATUS           = 'payment/portmone_pre_authorization_payment/payment_success_order_status';
     const XML_PATH_PAYMENT_ERROR_STATUS             = 'payment/portmone_pre_authorization_payment/payment_error_order_status';
     const XML_PATH_PAYMENT_SHIPPENT                 = 'payment/portmone_pre_authorization_payment/allowed_carrier';
@@ -166,6 +168,16 @@ class PortmonePreAuthorizationConfig extends AbstractHelper
     public function getNewOrderStatus()
     {
         return $this->getConfigValue(self::XML_PATH_PAYMENT_NEW_STATUS);
+    }
+
+    public function getHoldSuccessStatus()
+    {
+        return $this->getConfigValue(self::XML_PATH_SUCCESS_STATUS);
+    }
+
+    public function getHoldCancelStatus()
+    {
+        return $this->getConfigValue(self::XML_PATH_CANCEL_STATUS);
     }
 
     /**

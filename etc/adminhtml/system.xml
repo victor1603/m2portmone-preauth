@@ -27,44 +27,59 @@
                 <field id="order_status" translate="label" type="select" sortOrder="7" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Новый статус заказа</label>
                     <source_model>Magento\Sales\Model\Config\Source\Order\Status\NewStatus</source_model>
+                    <comment>Статус применяется сразу после создания нового заказа</comment>
                 </field>
-                <field id="payment_hold_complete_status" translate="label" type="select" sortOrder="8" showInDefault="1" showInWebsite="1" showInStore="0">
+                <field id="order_status_success_hold" translate="label" type="select" sortOrder="8" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Статус после успешного холда</label>
+                    <source_model>Magento\Sales\Model\Config\Source\Order\Status</source_model>
+                    <comment>Статус применяется после подтверждения пользователем его покупки на стороне portmone</comment>
+                </field>
+                <field id="order_status_cancel_hold" translate="label" type="select" sortOrder="9" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Статус после отмененного холда</label>
+                    <source_model>Magento\Sales\Model\Config\Source\Order\Status</source_model>
+                    <comment>Статус применяется после отмены пользователем его покупки на стороне portmone</comment>
+                </field>
+                <field id="payment_hold_complete_status" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Статус заказа для подтверждения пост-авторизации</label>
                     <source_model>Magento\Sales\Model\Config\Source\Order\Status</source_model>
+                    <comment>Статус который говорит о готовности снятия денег с холда</comment>
                 </field>
-                <field id="payment_hold_cancel_status" translate="label" type="select" sortOrder="9" showInDefault="1" showInWebsite="1" showInStore="0">
+                <field id="payment_hold_cancel_status" translate="label" type="select" sortOrder="11" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Статус заказа для отмены пост-авторизации</label>
                     <source_model>Magento\Sales\Model\Config\Source\Order\Status</source_model>
+                    <comment>Статус который говорит что заказ будет отменять холд</comment>
                 </field>
-                <field id="payment_success_order_status" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0">
+                <field id="payment_success_order_status" translate="label" type="select" sortOrder="12" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Статус заказа после успешной оплаты</label>
                     <source_model>Magento\Sales\Model\Config\Source\Order\Status</source_model>
+                    <comment>Статус применяется после успешного снятия денег с холда</comment>
                 </field>
-                <field id="payment_error_order_status" translate="label" type="select" sortOrder="11" showInDefault="1" showInWebsite="1" showInStore="0">
+                <field id="payment_error_order_status" translate="label" type="select" sortOrder="13" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Статус заказа после неудачной оплаты</label>
                     <source_model>\Magento\Sales\Model\Config\Source\Order\Status</source_model>
+                    <comment>Статус применяется после отмены снятия денег с холда</comment>
                 </field>
-                <field id="allowed_carrier" translate="label" type="multiselect" sortOrder="12" showInDefault="1" showInWebsite="1" showInStore="0">
+                <field id="allowed_carrier" translate="label" type="multiselect" sortOrder="14" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Допустимые методы доставки</label>
                     <source_model>Magento\Shipping\Model\Config\Source\Allmethods</source_model>
                 </field>
-                <field id="description" translate="label" type="text" sortOrder="13" showInDefault="1" showInWebsite="1" showInStore="0" >
+                <field id="description" translate="label" type="text" sortOrder="15" showInDefault="1" showInWebsite="1" showInStore="0" >
                     <label>Description of order in payment system</label>
                 </field>
-                <field id="submit_url" translate="label" type="text" sortOrder="14" showInDefault="1" showInWebsite="1" showInStore="0" >
+                <field id="submit_url" translate="label" type="text" sortOrder="16" showInDefault="1" showInWebsite="1" showInStore="0" >
                     <label>Submit URL</label>
                 </field>
-                <field id="language" translate="label" type="select" sortOrder="15" showInDefault="1" showInWebsite="1" showInStore="0" >
+                <field id="language" translate="label" type="select" sortOrder="17" showInDefault="1" showInWebsite="1" showInStore="0" >
                     <label>Language</label>
                     <source_model>\CodeCustom\PortmonePreAuthorization\Model\System\Config\Source\Language</source_model>
                 </field>
-                <field id="success_url" translate="label" type="text" sortOrder="16" showInDefault="1" showInWebsite="1" showInStore="0" >
+                <field id="success_url" translate="label" type="text" sortOrder="18" showInDefault="1" showInWebsite="1" showInStore="0" >
                     <label>Success URL</label>
                 </field>
-                <field id="failure_url" translate="label" type="text" sortOrder="17" showInDefault="1" showInWebsite="1" showInStore="0" >
+                <field id="failure_url" translate="label" type="text" sortOrder="19" showInDefault="1" showInWebsite="1" showInStore="0" >
                     <label>Failure URL</label>
                 </field>
-                <field id="front_url" translate="label" type="text" sortOrder="18" showInDefault="1" showInWebsite="1" showInStore="1" >
+                <field id="front_url" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1" >
                     <label>Front Redirect URL (PWA)</label>
                     <comment>This link optionaly for any storeviews in any websites. Add order_id to front derirect, example: https://front.url/success?order_id=</comment>
                 </field>
