@@ -17,6 +17,7 @@ use Magento\Sales\Model\Order\Payment\Transaction\BuilderInterface;
 use Magento\Sales\Api\TransactionRepositoryInterface;
 use CodeCustom\PortmonePreAuthorization\Helper\Logger;
 use Magento\Framework\Stdlib\DateTime\TimezoneInterface;
+use Magento\Sales\Model\ResourceModel\Order as OrderResource;
 
 class Success implements SuccessInterface
 {
@@ -76,6 +77,11 @@ class Success implements SuccessInterface
     protected $orderModel;
 
     /**
+     * @var OrderResource
+     */
+    protected $orderResource;
+
+    /**
      * @var null
      */
     public $history = null;
@@ -114,6 +120,7 @@ class Success implements SuccessInterface
         OrderRepositoryInterface $_orderRepository,
         BuilderInterface $_transactionBuilder,
         Order $order,
+        OrderResource $orderResource,
         TransactionRepositoryInterface $transactionRepository,
         Logger $logger,
         TimezoneInterface $timezone
@@ -129,6 +136,7 @@ class Success implements SuccessInterface
         $this->_orderRepository = $_orderRepository;
         $this->_transactionBuilder = $_transactionBuilder;
         $this->orderModel = $order;
+        $this->orderResource = $orderResource;
         $this->transactionRepository = $transactionRepository;
         $this->logger = $logger;
         $this->timezone = $timezone;
@@ -328,8 +336,7 @@ class Success implements SuccessInterface
                 ->setIsCustomerNotified(true);
         }
 
-        $order->save();
-        $this->_orderRepository->save($order);
+        $this->orderResource->save($order);
         return true;
     }
 

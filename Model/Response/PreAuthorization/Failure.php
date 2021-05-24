@@ -11,6 +11,7 @@ use Magento\Sales\Model\Order;
 use Magento\Store\Model\StoreManagerInterface;
 use CodeCustom\PortmonePreAuthorization\Helper\Logger;
 use Magento\Framework\Stdlib\DateTime\TimezoneInterface;
+use Magento\Sales\Model\ResourceModel\Order as OrderResource;
 
 class Failure implements FailureInterface
 {
@@ -34,6 +35,11 @@ class Failure implements FailureInterface
      * @var Order
      */
     protected $orderModel;
+
+    /**
+     * @var OrderResource
+     */
+    protected $orderResource;
 
     /**
      * @var OrderRepositoryInterface
@@ -75,6 +81,7 @@ class Failure implements FailureInterface
         PortmonePreAuthorizationConfig $configHelper,
         OrderRepositoryInterface $_orderRepository,
         Order $orderModel,
+        OrderResource $orderResource,
         StoreManagerInterface $storeManager,
         Logger $logger,
         TimezoneInterface $timezone
@@ -85,6 +92,7 @@ class Failure implements FailureInterface
         $this->configHelper = $configHelper;
         $this->_orderRepository = $_orderRepository;
         $this->orderModel = $orderModel;
+        $this->orderResource = $orderResource;
         $this->storeManager = $storeManager;
         $this->logger = $logger;
         $this->timezone = $timezone;
@@ -150,8 +158,7 @@ class Failure implements FailureInterface
                 ->setIsCustomerNotified(true);
         }
 
-        $order->save();
-        $this->_orderRepository->save($order);
+        $this->orderResource->save($order);
         return true;
     }
 
