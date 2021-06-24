@@ -5,5 +5,8 @@
         <route id="portmonepreauth" frontName="portmonepreauth">
             <module name="CodeCustom_PortmonePreAuthorization" />
         </route>
+        <route id="portmone" frontName="portmone">
+            <module name="CodeCustom_PortmonePreAuthorization" />
+        </route>
     </router>
 </config>

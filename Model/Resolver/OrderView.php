@@ -91,8 +91,7 @@ class OrderView implements ResolverInterface
             'created_at' => $this->getCreatedAt($order->getCreatedAt()),
             'shipping_city' => $order->getShippingAddress()->getCity(),
             'shipping_street' => is_array($order->getShippingAddress()->getStreet())
-                && isset($order->getShippingAddress()->getStreet()[0])
-                ? $order->getShippingAddress()->getStreet()[0]
+                ? implode(',', $order->getShippingAddress()->getStreet())
                 : "",
             'payment' => $order->getPayment()->getMethodInstance()->getTitle(),
             'customer_firstname' => $order->getShippingAddress()->getFirstname(),

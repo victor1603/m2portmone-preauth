@@ -13,6 +13,7 @@ use Magento\Framework\View\LayoutFactory;
 use CodeCustom\PortmonePreAuthorization\Helper\Config\PortmonePreAuthorizationConfig;
 use CodeCustom\PortmonePreAuthorization\Helper\Logger;
 use Magento\Framework\Stdlib\DateTime\TimezoneInterface;
+use CodeCustom\PortmonePreAuthorization\Model\PortmonePaymentLink;
 
 class PlaceOrder
 {
@@ -51,6 +52,8 @@ class PlaceOrder
      */
     protected $timezone;
 
+    protected $portmoneLink;
+
     /**
      * PlaceOrder constructor.
      * @param PlaseOrderResolve $placeOrderResolve
@@ -66,7 +69,8 @@ class PlaceOrder
         LayoutFactory $layoutFactory,
         PortmonePreAuthorizationConfig $portmoneHelper,
         Logger $logger,
-        TimezoneInterface $timezone
+        TimezoneInterface $timezone,
+        PortmonePaymentLink $portmoneLink
     )
     {
         $this->placeOrderResolve = $placeOrderResolve;
@@ -76,6 +80,7 @@ class PlaceOrder
         $this->portmoneHelper = $portmoneHelper;
         $this->logger = $logger;
         $this->timezone = $timezone;
+        $this->portmoneLink = $portmoneLink;
     }
 
     /**
@@ -108,9 +113,8 @@ class PlaceOrder
             $order = $this->orderModel->loadByIncrementId($orderId);
 
             if ($order && $order->getPayment()->getMethod() == PortmonePreAuthorization::METHOD_CODE) {
-                $extensionData = $this->getPaymentLogic($order);
-                $resolvedValue['order']['payment_extension_data']['redirect_url'] = $this->portmoneHelper->getSubmitUrl();
-                $resolvedValue['order']['payment_extension_data']['html_data'] = $extensionData;
+                $resolvedValue['order']['payment_extension_data']['redirect_url'] = $this->portmoneLink->getPaymentLink($order);
+                $resolvedValue['order']['payment_extension_data']['html_data'] = '';
                 $resolvedValue['order']['payment_extension_data']['payment_method'] = $order->getPayment()->getMethod();
                 $this->createLogger($order);
             }

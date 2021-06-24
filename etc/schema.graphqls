@@ -55,3 +55,11 @@ type paymentData {
     html_data: String
     payment_method: String
 }
+
+type CustomerOrder {
+    portmone_payment_data: PortmonePaymentLink @resolver(class: "\\CodeCustom\\PortmonePreAuthorization\\Model\\Resolver\\CustomerOrder")
+}
+
+type PortmonePaymentLink {
+    payment_url: String
+}

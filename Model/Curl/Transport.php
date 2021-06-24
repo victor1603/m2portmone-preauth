@@ -108,4 +108,30 @@ class Transport
         ];
     }
 
+    /**
+     * @param $data
+     * @return mixed|null
+     */
+    public function getRequestUrl($data)
+    {
+        $redirectUrl = null;
+        try {
+            $this->curl->setOption(CURLOPT_TIMEOUT, 30);
+            $this->curl->post(
+                $this->configHelper->getSubmitUrl(),
+                $data);
+            $result = is_array($this->curl->getHeaders())
+                ? $this->curl->getHeaders()
+                : json_decode($this->curl->getHeaders(), true);
+        } catch (\Exception $exception) {
+            $redirectUrl = null;
+        }
+
+        if ($result && isset($result['Location'])) {
+            $redirectUrl = $result['Location'];
+        }
+
+        return $redirectUrl;
+    }
+
 }
