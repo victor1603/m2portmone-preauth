@@ -61,7 +61,7 @@ class PortmonePaymentLink
         return $this->storeManager->getStore()->getBaseUrl()
             . self::URL_PATH
             . '?o=' . base64_encode($order->getIncrementId())
-            . '&u=' . base64_encode($order->getCustomerId());
+            . '&c=' . base64_encode($order->getCustomerId());
     }
 
     /**

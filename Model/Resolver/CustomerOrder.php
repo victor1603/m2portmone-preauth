@@ -84,9 +84,7 @@ class CustomerOrder implements ResolverInterface
     public function resolve(Field $field, $context, ResolveInfo $info, array $value = null, array $args = null)
     {
         $order = $value['model'];
-        $this->transport->getRequestUrl(
-            $this->portmoneSdk->postData()
-        );
+
         return [
             'payment_url' => $this->getPaymentUrl($order)
         ];
