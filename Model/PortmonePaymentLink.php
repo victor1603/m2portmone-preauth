@@ -10,7 +10,9 @@ use Magento\Store\Model\StoreManagerInterface;
 
 class PortmonePaymentLink
 {
-    const URL_PATH = 'portmone/pay/order';
+    const URL_PATH          = 'portmone/pay/order';
+
+    const PWA_URL_PATH      = '/portmone';
 
     /**
      * @var CustomerRepositoryInterface
@@ -60,6 +62,17 @@ class PortmonePaymentLink
     {
         return $this->storeManager->getStore()->getBaseUrl()
             . self::URL_PATH
+            . '?o=' . base64_encode($order->getIncrementId())
+            . '&c=' . base64_encode($order->getCustomerId());
+    }
+
+    /**
+     * @param Order $order
+     * @return string
+     */
+    public function getPWAPaymentUrl(Order $order)
+    {
+        return self::PWA_URL_PATH
             . '?o=' . base64_encode($order->getIncrementId())
             . '&c=' . base64_encode($order->getCustomerId());
     }

@@ -21,6 +21,9 @@ directive @cache(cacheable: Boolean) on FIELD_DEFINITION
 type Query {
     getorder(order_id: String!): OrderViewOutput
     @resolver(class: "\\CodeCustom\\PortmonePreAuthorization\\Model\\Resolver\\OrderView")
+
+    get_payment_url(order: String!, customer: String!): PortmonePaymentLink
+    @resolver(class: "\\CodeCustom\\PortmonePreAuthorization\\Model\\Resolver\\PaymentUrl")
 }
 
 type OrderViewOutput {

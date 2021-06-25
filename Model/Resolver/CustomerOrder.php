@@ -122,7 +122,7 @@ class CustomerOrder implements ResolverInterface
         if ($order->getStatus() == $this->portmonePreAuthorizationConfig->getNewOrderStatus()
             && $order->getPayment()->getMethod() == PortmonePreAuthorization::METHOD_CODE
         ) {
-            return $this->portmoneLink->getInternalPaymentUrl($order);
+            return $this->portmoneLink->getPWAPaymentUrl($order);
         }
         return null;
     }
