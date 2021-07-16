@@ -121,7 +121,7 @@ class Failure implements FailureInterface
             $error = true;
         }
 
-        $redirectPage = $this->configHelper->getFrontRedirectUrl($storeId);
+        $redirectPage = $this->configHelper->getFrontRedirectCancelUrl($storeId);
         if (strpos($redirectPage, 'order_id=') !== false && !$error) {
             $redirectPage .= $order->getIncrementId();
         }

@@ -38,6 +38,7 @@ type OrderViewOutput {
     customer_lastname: String
     customer_telephone: String
     items: [OrderProductItems]
+    payment_url: String
 }
 
 type OrderProductItems {

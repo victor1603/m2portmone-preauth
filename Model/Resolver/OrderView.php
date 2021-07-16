@@ -2,6 +2,7 @@
 
 namespace CodeCustom\PortmonePreAuthorization\Model\Resolver;
 
+use CodeCustom\PortmonePreAuthorization\Model\PortmonePreAuthorization;
 use Magento\Framework\GraphQl\Config\Element\Field;
 use Magento\Framework\GraphQl\Exception\GraphQlNoSuchEntityException;
 use Magento\Framework\GraphQl\Query\ResolverInterface;
@@ -10,6 +11,7 @@ use Magento\Sales\Model\Order;
 use Magento\Framework\GraphQl\Exception\GraphQlAuthorizationException;
 use Magento\Catalog\Helper\Image;
 use Magento\Framework\Stdlib\DateTime\TimezoneInterface;
+use CodeCustom\PortmonePreAuthorization\Model\PortmonePaymentLink;
 
 class OrderView implements ResolverInterface
 {
@@ -28,6 +30,8 @@ class OrderView implements ResolverInterface
      */
     protected $timezone;
 
+    protected $portmoneLink;
+
     /**
      * OrderView constructor.
      * @param Order $order
@@ -36,12 +40,14 @@ class OrderView implements ResolverInterface
     public function __construct(
         Order $order,
         Image $imageHelper,
-        TimezoneInterface $timezone
+        TimezoneInterface $timezone,
+        PortmonePaymentLink $portmoneLink
     )
     {
         $this->order = $order;
         $this->imageHelper = $imageHelper;
         $this->timezone = $timezone;
+        $this->portmoneLink = $portmoneLink;
     }
 
     /**
@@ -97,7 +103,10 @@ class OrderView implements ResolverInterface
             'customer_firstname' => $order->getShippingAddress()->getFirstname(),
             'customer_lastname' => $order->getShippingAddress()->getLastname(),
             'customer_telephone' => $order->getShippingAddress()->getTelephone(),
-            'items' => $this->getOrderItems($order)
+            'items' => $this->getOrderItems($order),
+            'payment_url' => $order->getPayment()->getMethod() == PortmonePreAuthorization::METHOD_CODE
+                ? $this->portmoneLink->getPaymentLink($order)
+                : null
         ];
     }
 

@@ -80,8 +80,12 @@
                     <label>Failure URL</label>
                 </field>
                 <field id="front_url" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1" >
-                    <label>Front Redirect URL (PWA)</label>
+                    <label>Front Redirect SUCCESS URL (PWA)</label>
                     <comment>This link optionaly for any storeviews in any websites. Add order_id to front derirect, example: https://front.url/success?order_id=</comment>
+                </field>
+                <field id="front_url_cancel" translate="label" type="text" sortOrder="21" showInDefault="1" showInWebsite="1" showInStore="1" >
+                    <label>Front Redirect CANCELATION URL (PWA)</label>
+                    <comment>This link optionaly for any storeviews in any websites. Add order_id to front derirect, example: https://front.url/cancel?order_id=</comment>
                 </field>
             </group>
         </section>

@@ -26,6 +26,7 @@ class PortmonePreAuthorizationConfig extends AbstractHelper
     const XML_PATH_SUCCESS_URL                      = 'payment/portmone_pre_authorization_payment/success_url';
     const XML_PATH_FAILURE_URL                      = 'payment/portmone_pre_authorization_payment/failure_url';
     const XML_PATH_FRONT_URL                        = 'payment/portmone_pre_authorization_payment/front_url';
+    const XML_PATH_FRONT_URL_CANCEL                 = 'payment/portmone_pre_authorization_payment/front_url_cancel';
     const XML_PATH_ALLOWED_CARRIERS                 = 'payment/portmone_pre_authorization_payment/allowed_carrier';
     const XML_PATH_ORDER_PREFIX                     = 'payment/portmone_pre_authorization_payment/order_prefix';
     const XML_PATH_POSTAUTH_CONFIRM_STATUS          = 'payment/portmone_pre_authorization_payment/payment_hold_complete_status';
@@ -163,6 +164,15 @@ class PortmonePreAuthorizationConfig extends AbstractHelper
     }
 
     /**
+     * @param $storeId
+     * @return mixed
+     */
+    public function getFrontRedirectCancelUrl($storeId = nul)
+    {
+        return $this->getConfigValue(self::XML_PATH_FRONT_URL_CANCEL, $storeId);
+    }
+
+    /**
      * @return mixed
      */
     public function getNewOrderStatus()
@@ -170,11 +180,17 @@ class PortmonePreAuthorizationConfig extends AbstractHelper
         return $this->getConfigValue(self::XML_PATH_PAYMENT_NEW_STATUS);
     }
 
+    /**
+     * @return mixed
+     */
     public function getHoldSuccessStatus()
     {
         return $this->getConfigValue(self::XML_PATH_SUCCESS_STATUS);
     }
 
+    /**
+     * @return mixed
+     */
     public function getHoldCancelStatus()
     {
         return $this->getConfigValue(self::XML_PATH_CANCEL_STATUS);
