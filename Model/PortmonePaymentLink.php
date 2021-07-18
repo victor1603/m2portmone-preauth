@@ -7,6 +7,7 @@ use Magento\Customer\Api\CustomerRepositoryInterface;
 use CodeCustom\PortmonePreAuthorization\Model\Curl\Transport;
 use CodeCustom\PortmonePreAuthorization\Model\Data as TransportData;
 use Magento\Store\Model\StoreManagerInterface;
+use CodeCustom\PortmonePreAuthorization\Helper\Config\PortmonePreAuthorizationConfig;
 
 class PortmonePaymentLink
 {
@@ -35,6 +36,11 @@ class PortmonePaymentLink
     protected $storeManager;
 
     /**
+     * @var PortmonePreAuthorizationConfig
+     */
+    protected $portmoneConfig;
+
+    /**
      * PortmonePaymentLink constructor.
      * @param CustomerRepositoryInterface $customerRepository
      * @param Transport $curlTransport
@@ -44,13 +50,15 @@ class PortmonePaymentLink
         CustomerRepositoryInterface $customerRepository,
         Transport $curlTransport,
         TransportData $transportData,
-        StoreManagerInterface $storeManager
+        StoreManagerInterface $storeManager,
+        PortmonePreAuthorizationConfig $portmoneConfig
     )
     {
         $this->customerRepository = $customerRepository;
         $this->curlTransport = $curlTransport;
         $this->transportData = $transportData;
         $this->storeManager = $storeManager;
+        $this->portmoneConfig = $portmoneConfig;
     }
 
     /**
@@ -94,6 +102,30 @@ class PortmonePaymentLink
             $result = $this->curlTransport->getRequestUrl(
                 $this->transportData->getData($order, $customer)
             );
+        } catch (\Exception $exception) {
+            $result = null;
+        }
+
+        return $result;
+    }
+
+    /**
+     * @param Order $order
+     * @return string|null
+     */
+    public function getFullPaymentLink(Order $order)
+    {
+        try {
+            if (
+                $order->getPayment()->getMethod() == PortmonePreAuthorization::METHOD_CODE
+                && $order->getStatus() == $this->portmoneConfig->getNewOrderStatus()
+            ) {
+                $frontBaseUrl = $this->portmoneConfig->getFrontBaseUrl($order->getStoreId());
+                $result = $frontBaseUrl ? $frontBaseUrl . $this->getPWAPaymentUrl($order) : '';
+                $result = $this->portmoneConfig->isBitlyPaymentLinkEnabled()
+                    ? $this->curlTransport->getShortenUrl($result)
+                    : $result;
+            }
         } catch (\Exception $exception) {
             $result = null;
         }

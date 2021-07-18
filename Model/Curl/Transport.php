@@ -134,4 +134,34 @@ class Transport
         return $redirectUrl;
     }
 
+    /**
+     * Get bit.ly short URL
+     * we return long url if bitly service forbiden
+     *
+     * @param null $longUrl
+     * @return mixed|null
+     */
+    public function getShortenUrl($longUrl = null)
+    {
+        if (!$longUrl) {
+            return null;
+        }
+
+        try {
+            $data = array('long_url' => $longUrl);
+            $this->curl->addHeader('Content-Type', 'application/json');
+            $this->curl->addHeader('Authorization', 'Bearer ' . $this->configHelper->getBitlyToken());
+            $this->curl->setOption(CURLOPT_TIMEOUT, 30);
+            $this->curl->post(
+                $this->configHelper->getBitlyUrl(),
+                json_encode($data));
+            $body = json_decode($this->curl->getBody(), true);
+            $result = $body && isset($body['link']) ? $body['link'] : $longUrl;
+        } catch (\Exception $exception) {
+            $result = null;
+        }
+
+        return $result;
+    }
+
 }

@@ -1,0 +1,45 @@
+<?php
+
+/** @var $block \CodeCustom\PortmonePreAuthorization\Block\Adminhtml\Order\View\Tab\PaymentLink */
+/** @var \Magento\Framework\View\Helper\SecureHtmlRenderer $secureRenderer */
+?>
+
+<?php if ($block->isPaymentLinkEnabled()): ?>
+<div class="admin__page-section-content">
+    <div class="admin__page-section-item">
+        <div class="admin__page-section-item-title">
+            <span class="title"></span>
+        </div>
+        <div class="admin__page-section-item-content">
+            <div id="payment-link">
+                <label><strong>Portmone Payment link</strong></label>
+                <div style="margin-top: 10px; width: 100%">
+                    <textarea id="payment-link-input" class="admin__control-textarea" style="width: 80%"><?=$block->getOrderPaymentLink()?></textarea>
+                </div>
+                <button id="copy-link" class="action-default scalable action-secondary" style="width: 100px"><?= $block->escapeHtml(__('Copy')) ?></button>
+            </div>
+        </div>
+    </div>
+    <?php $scriptString = <<<script
+        require(['jquery'], function($){
+
+        if ($('#payment-link-input').val().length < 100) {
+            $('#payment-link-input').css('width', '50%');
+        }
+
+        $(document).on('click', '#copy-link', function(){
+            copytextToClb();
+        });
+
+            function copytextToClb() {
+                const area = document.querySelector('#payment-link-input')
+                area.select();
+                document.execCommand('copy')
+            }
+        });
+script;
+    ?>
+    <?= /* @noEscape */ $secureRenderer->renderTag('script', [], $scriptString, false) ?>
+</div>
+<?php endif; ?>
+

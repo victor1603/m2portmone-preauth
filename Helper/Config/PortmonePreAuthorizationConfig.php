@@ -9,31 +9,36 @@ use Magento\Store\Model\StoreManagerInterface;
 
 class PortmonePreAuthorizationConfig extends AbstractHelper
 {
-    const XML_PATH_IS_ENABLED                       = 'payment/portmone_pre_authorization_payment/active';
-    const XML_PATH_TITLE                            = 'payment/portmone_pre_authorization_payment/title';
-    const XML_PATH_PAYEE_ID                         = 'payment/portmone_pre_authorization_payment/payee_id';
-    const XML_PATH_LOGIN                            = 'payment/portmone_pre_authorization_payment/login';
-    const XML_PATH_PASSWORD                         = 'payment/portmone_pre_authorization_payment/password';
-    const XML_PATH_PAYMENT_NEW_STATUS               = 'payment/portmone_pre_authorization_payment/order_status';
-    const XML_PATH_SUCCESS_STATUS                   = 'payment/portmone_pre_authorization_payment/order_status_success_hold';
-    const XML_PATH_CANCEL_STATUS                    = 'payment/portmone_pre_authorization_payment/order_status_cancel_hold';
-    const XML_PATH_PAYMENT_SUCCESS_STATUS           = 'payment/portmone_pre_authorization_payment/payment_success_order_status';
-    const XML_PATH_PAYMENT_ERROR_STATUS             = 'payment/portmone_pre_authorization_payment/payment_error_order_status';
-    const XML_PATH_PAYMENT_SHIPPENT                 = 'payment/portmone_pre_authorization_payment/allowed_carrier';
-    const XML_PATH_DESCRIPTION                      = 'payment/portmone_pre_authorization_payment/description';
-    const XML_PATH_SUBMIT_URL                       = 'payment/portmone_pre_authorization_payment/submit_url';
-    const XML_PATH_LANGUAGE                         = 'payment/portmone_pre_authorization_payment/language';
-    const XML_PATH_SUCCESS_URL                      = 'payment/portmone_pre_authorization_payment/success_url';
-    const XML_PATH_FAILURE_URL                      = 'payment/portmone_pre_authorization_payment/failure_url';
-    const XML_PATH_FRONT_URL                        = 'payment/portmone_pre_authorization_payment/front_url';
-    const XML_PATH_FRONT_URL_CANCEL                 = 'payment/portmone_pre_authorization_payment/front_url_cancel';
-    const XML_PATH_ALLOWED_CARRIERS                 = 'payment/portmone_pre_authorization_payment/allowed_carrier';
-    const XML_PATH_ORDER_PREFIX                     = 'payment/portmone_pre_authorization_payment/order_prefix';
-    const XML_PATH_POSTAUTH_CONFIRM_STATUS          = 'payment/portmone_pre_authorization_payment/payment_hold_complete_status';
-    const XML_PATH_POSTAUTH_CANCEL_STATUS           = 'payment/portmone_pre_authorization_payment/payment_hold_cancel_status';
+    const XML_PATH_IS_ENABLED = 'payment/portmone_pre_authorization_payment/active';
+    const XML_PATH_TITLE = 'payment/portmone_pre_authorization_payment/title';
+    const XML_PATH_PAYEE_ID = 'payment/portmone_pre_authorization_payment/payee_id';
+    const XML_PATH_LOGIN = 'payment/portmone_pre_authorization_payment/login';
+    const XML_PATH_PASSWORD = 'payment/portmone_pre_authorization_payment/password';
+    const XML_PATH_PAYMENT_NEW_STATUS = 'payment/portmone_pre_authorization_payment/order_status';
+    const XML_PATH_SUCCESS_STATUS = 'payment/portmone_pre_authorization_payment/order_status_success_hold';
+    const XML_PATH_CANCEL_STATUS = 'payment/portmone_pre_authorization_payment/order_status_cancel_hold';
+    const XML_PATH_PAYMENT_SUCCESS_STATUS = 'payment/portmone_pre_authorization_payment/payment_success_order_status';
+    const XML_PATH_PAYMENT_ERROR_STATUS = 'payment/portmone_pre_authorization_payment/payment_error_order_status';
+    const XML_PATH_PAYMENT_SHIPPENT = 'payment/portmone_pre_authorization_payment/allowed_carrier';
+    const XML_PATH_DESCRIPTION = 'payment/portmone_pre_authorization_payment/description';
+    const XML_PATH_SUBMIT_URL = 'payment/portmone_pre_authorization_payment/submit_url';
+    const XML_PATH_LANGUAGE = 'payment/portmone_pre_authorization_payment/language';
+    const XML_PATH_SUCCESS_URL = 'payment/portmone_pre_authorization_payment/success_url';
+    const XML_PATH_FAILURE_URL = 'payment/portmone_pre_authorization_payment/failure_url';
+    const XML_PATH_FRONT_BASE_URL = 'payment/portmone_pre_authorization_payment/front_base_url';
+    const XML_PATH_FRONT_URL = 'payment/portmone_pre_authorization_payment/front_url';
+    const XML_PATH_FRONT_URL_CANCEL = 'payment/portmone_pre_authorization_payment/front_url_cancel';
+    const XML_PATH_ALLOWED_CARRIERS = 'payment/portmone_pre_authorization_payment/allowed_carrier';
+    const XML_PATH_ORDER_PREFIX = 'payment/portmone_pre_authorization_payment/order_prefix';
+    const XML_PATH_POSTAUTH_CONFIRM_STATUS = 'payment/portmone_pre_authorization_payment/payment_hold_complete_status';
+    const XML_PATH_POSTAUTH_CANCEL_STATUS = 'payment/portmone_pre_authorization_payment/payment_hold_cancel_status';
+    const XML_PATH_BITLY_ENABLED = 'payment/portmone_pre_authorization_payment/bitly_enable';
 
-    const XML_PATH_CONFIRM_CRON_ENABLE              = 'portmone_post_auth/cron/portmone_cron_confirm_enable';
-    const XML_PATH_CANCEL_CRON_ENABLE               = 'portmone_post_auth/cron/portmone_cron_cancel_enable';
+    const XML_PATH_CONFIRM_CRON_ENABLE = 'portmone_post_auth/cron/portmone_cron_confirm_enable';
+    const XML_PATH_CANCEL_CRON_ENABLE = 'portmone_post_auth/cron/portmone_cron_cancel_enable';
+
+    const XML_BITLY_URL = 'bitly_settings/bitly_configs/bitly_api_url';
+    const XML_BITLY_TOKEN = 'bitly_settings/bitly_configs/bitly_token';
 
     /**
      * @var StoreManagerInterface
@@ -152,6 +157,15 @@ class PortmonePreAuthorizationConfig extends AbstractHelper
     public function getLanguage()
     {
         return $this->getConfigValue(self::XML_PATH_LANGUAGE);
+    }
+
+    /**
+     * @param null $storeId
+     * @return mixed
+     */
+    public function getFrontBaseUrl($storeId = null)
+    {
+        return $this->getConfigValue(self::XML_PATH_FRONT_BASE_URL, $storeId);
     }
 
     /**
@@ -283,4 +297,27 @@ class PortmonePreAuthorizationConfig extends AbstractHelper
         return $this->getConfigValue(self::XML_PATH_CANCEL_CRON_ENABLE);
     }
 
+    /**
+     * @return mixed
+     */
+    public function isBitlyPaymentLinkEnabled()
+    {
+        return $this->getConfigValue(self::XML_PATH_BITLY_ENABLED);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getBitlyUrl()
+    {
+        return $this->getConfigValue(self::XML_BITLY_URL);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getBitlyToken()
+    {
+        return $this->getConfigValue(self::XML_BITLY_TOKEN);
+    }
 }

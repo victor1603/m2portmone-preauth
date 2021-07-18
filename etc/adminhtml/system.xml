@@ -79,6 +79,14 @@
                 <field id="failure_url" translate="label" type="text" sortOrder="19" showInDefault="1" showInWebsite="1" showInStore="0" >
                     <label>Failure URL</label>
                 </field>
+                <field id="front_base_url" translate="label" type="text" sortOrder="19" showInDefault="1" showInWebsite="1" showInStore="1" >
+                    <label>PWA-Base URL</label>
+                    <comment>This url use to build Payment Link in order area and must be configured for all store views</comment>
+                </field>
+                <field id="bitly_enable" translate="label" type="select" sortOrder="19" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Enable bit.ly payment links in admin area</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
                 <field id="front_url" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1" >
                     <label>Front Redirect SUCCESS URL (PWA)</label>
                     <comment>This link optionaly for any storeviews in any websites. Add order_id to front derirect, example: https://front.url/success?order_id=</comment>
@@ -138,6 +146,21 @@
                     <label>Enable cron job for cancel payment</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <comment>Enable/Disable execute in cron</comment>
+                </field>
+            </group>
+        </section>
+        <section id="bitly_settings" translate="label" type="text" showInDefault="1" showInWebsite="1" showInStore="1">
+            <class>separator-top</class>
+            <label>Bit.ly settings</label>
+            <tab>codecustom_tab</tab>
+            <resource>CodeCustom_Payments::config</resource>
+            <group id="bitly_configs" translate="label" type="text" sortOrder="1" showInDefault="1" showInWebsite="0" showInStore="0">
+                <label>Bit.ly short url API settings</label>
+                <field id="bitly_api_url" translate="label" type="text" sortOrder="1" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Bitly API url</label>
+                </field>
+                <field id="bitly_token" translate="label" type="text" sortOrder="2" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Bitly Access Token</label>
                 </field>
             </group>
         </section>
