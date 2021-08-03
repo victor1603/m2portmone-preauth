@@ -122,25 +122,25 @@ class PortmonePreAuthorizationConfig extends AbstractHelper
     /**
      * @return mixed
      */
-    public function getPayeeId()
+    public function getPayeeId($storeId = null)
     {
-        return $this->getConfigValue(self::XML_PATH_PAYEE_ID);
+        return $this->getConfigValue(self::XML_PATH_PAYEE_ID, $storeId);
     }
 
     /**
      * @return mixed
      */
-    public function getLogin()
+    public function getLogin($storeId = null)
     {
-        return $this->getConfigValue(self::XML_PATH_LOGIN);
+        return $this->getConfigValue(self::XML_PATH_LOGIN, $storeId);
     }
 
     /**
      * @return mixed
      */
-    public function getPassword()
+    public function getPassword($storeId = null)
     {
-        return $this->getConfigValue(self::XML_PATH_PASSWORD);
+        return $this->getConfigValue(self::XML_PATH_PASSWORD, $storeId);
     }
 
     /**

@@ -98,9 +98,9 @@ class Transport
             'method' => $method,
             'params' => [
                 'data' => [
-                    'login' => $this->configHelper->getLogin(),
-                    'password' => $this->configHelper->getPassword(),
-                    'payeeId' => $this->configHelper->getPayeeId(),
+                    'login' => $this->configHelper->getLogin($order->getStoreId()),
+                    'password' => $this->configHelper->getPassword($order->getStoreId()),
+                    'payeeId' => $this->configHelper->getPayeeId($order->getStoreId()),
                     'shopOrderNumber' => $prefix . $order->getIncrementId(),
                     'postauthAmount' => $order->getGrandTotal()
                 ]

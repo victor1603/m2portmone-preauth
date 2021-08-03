@@ -96,7 +96,8 @@ class RedirectForm extends Template
                 'pToken' => $this->getAttribute('ptoken'),
                 'cardMask' => $this->getAttribute('card_mask'),
                 'customerEmail' => $this->_order->getCustomerEmail(),
-                'isGuest' => $this->_order->getCustomerIsGuest()
+                'isGuest' => $this->_order->getCustomerIsGuest(),
+                'storeId' => $this->_order->getStoreId()
             ]
         );
         return $html;

@@ -17,12 +17,15 @@
                 </field>
                 <field id="payee_id" translate="label" type="text" sortOrder="4" showInDefault="1" showInWebsite="1" showInStore="0" >
                     <label>Идентификатор магазина Portmone(Payee ID)</label>
+                    <comment>Эту опцию можно использовать уникальную на разных WebSites</comment>
                 </field>
                 <field id="login" translate="label" type="text" sortOrder="4" showInDefault="1" showInWebsite="1" showInStore="0" >
                     <label>Login</label>
+                    <comment>Эту опцию можно использовать уникальную на разных WebSites</comment>
                 </field>
                 <field id="password" translate="label" type="password" sortOrder="4" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Password</label>
+                    <comment>Эту опцию можно использовать уникальную на разных WebSites</comment>
                 </field>
                 <field id="order_status" translate="label" type="select" sortOrder="7" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Новый статус заказа</label>

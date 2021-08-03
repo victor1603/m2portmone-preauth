@@ -49,7 +49,7 @@ class Portmone extends PortmoneCoreSdk
         $params = [];
         $params['paymentTypes'] = $this->getPaymentTypes();
         $params['priorityPaymentTypes'] = $this->getPriorityPaymentTypes();
-        $params['payee'] = $this->getPayee();
+        $params['payee'] = $this->getPayee($data['storeId']);
         $params['order'] = $this->getOrder($data['orderId'], $data['grandTotal']);
         $params['token'] = $this->getToken($data['pToken'], $data['cardMask']);
         $params['payer'] = $this->getPayer($data['customerEmail']);
@@ -64,7 +64,7 @@ class Portmone extends PortmoneCoreSdk
     {
         $params['params'] = $this->prepareParams($data);
         $params['isGuest'] = $data['isGuest'];
-        $params['payeeId'] = $this->_helper->getPayeeId();
+        $params['payeeId'] = $this->_helper->getPayeeId($data['storeId']);
         $params['orderId'] = $data['orderId'];
         $params['grandTotal'] = $data['grandTotal'];
         $params['description'] = $this->_helper->getDescription();
@@ -82,7 +82,7 @@ class Portmone extends PortmoneCoreSdk
     {
         $params['params'] = $this->prepareParams($data);
         $params['isGuest'] = $data['isGuest'];
-        $params['payeeId'] = $this->_helper->getPayeeId();
+        $params['payeeId'] = $this->_helper->getPayeeId($data['storeId']);
         $params['orderId'] = $data['orderId'];
         $params['grandTotal'] = $data['grandTotal'];
         $params['description'] = $this->_helper->getDescription();
@@ -131,10 +131,10 @@ class Portmone extends PortmoneCoreSdk
     /**
      * @return array
      */
-    private function getPayee()
+    private function getPayee($storeId = null)
     {
         return [
-            'payeeId' => $this->_helper->getPayeeId(),
+            'payeeId' => $this->_helper->getPayeeId($storeId),
             'login' => '',
             'signature' => '',
             'shopSiteId' => '',

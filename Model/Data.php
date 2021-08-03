@@ -51,7 +51,8 @@ class Data
                 'pToken' => $this->getPToken($customer),
                 'cardMask' => $this->getCardMask($customer),
                 'customerEmail' => $order->getCustomerEmail(),
-                'isGuest' => $order->getCustomerIsGuest()
+                'isGuest' => $order->getCustomerIsGuest(),
+                'storeId' => $order->getStoreId()
             ]
         );
     }
