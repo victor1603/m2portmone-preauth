@@ -3,6 +3,7 @@
 namespace CodeCustom\PortmonePreAuthorization\Cron;
 
 use CodeCustom\PortmonePreAuthorization\Helper\Config\PortmonePreAuthorizationConfig;
+use CodeCustom\PortmonePreAuthorization\Model\PortmonePreAuthorization;
 use Magento\Sales\Model\Order;
 use Magento\Sales\Model\ResourceModel\Order\CollectionFactory as OrderCollectionFactory;
 use CodeCustom\PortmonePreAuthorization\Model\Response\PostAuthorization\Cancellation;
@@ -77,6 +78,17 @@ class Cancel
                 ->addFieldToFilter('status', [
                     'eq' => $this->configHelper->getPostAuthCancelStatus()
                 ]);
+            $collection->getSelect()
+                ->join(
+                    ["s" => "sales_order_payment"],
+                    'main_table.entity_id = s.parent_id',
+                    array('method')
+                )
+                ->where('s.method = ?',PortmonePreAuthorization::METHOD_CODE );
+            $collection->setOrder(
+                'created_at',
+                'desc'
+            );
             $collection
                 ->setPageSize(self::MAX_ORDER_COUNT)
                 ->setCurPage(1);

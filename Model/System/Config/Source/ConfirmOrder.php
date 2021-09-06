@@ -5,6 +5,7 @@ namespace CodeCustom\PortmonePreAuthorization\Model\System\Config\Source;
 use Magento\Framework\Data\OptionSourceInterface;
 use CodeCustom\PortmonePreAuthorization\Helper\Config\PortmonePreAuthorizationConfig;
 use Magento\Sales\Model\ResourceModel\Order\CollectionFactory as OrderCollectionFactory;
+use CodeCustom\PortmonePreAuthorization\Model\PortmonePreAuthorization;
 
 class ConfirmOrder implements OptionSourceInterface
 {
@@ -53,6 +54,17 @@ class ConfirmOrder implements OptionSourceInterface
                 ->addFieldToFilter('status', [
                     'eq' => $this->configHelper->getPostAuthConfirmStatus()
                 ]);
+            $collection->getSelect()
+                ->join(
+                    ["s" => "sales_order_payment"],
+                    'main_table.entity_id = s.parent_id',
+                    array('method')
+                )
+                ->where('s.method = ?',PortmonePreAuthorization::METHOD_CODE );
+            $collection->setOrder(
+                'created_at',
+                'desc'
+            );
 
             if ($collection->getSize()) {
                 foreach ($collection as $item) {

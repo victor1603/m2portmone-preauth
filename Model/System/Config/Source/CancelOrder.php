@@ -2,6 +2,7 @@
 
 namespace CodeCustom\PortmonePreAuthorization\Model\System\Config\Source;
 
+use CodeCustom\PortmonePreAuthorization\Model\PortmonePreAuthorization;
 use Magento\Framework\Data\OptionSourceInterface;
 use CodeCustom\PortmonePreAuthorization\Helper\Config\PortmonePreAuthorizationConfig;
 use Magento\Sales\Model\ResourceModel\Order\CollectionFactory as OrderCollectionFactory;
@@ -53,6 +54,17 @@ class CancelOrder implements OptionSourceInterface
                 ->addFieldToFilter('status', [
                     'eq' => $this->configHelper->getPostAuthCancelStatus()
                 ]);
+            $collection->getSelect()
+                ->join(
+                    ["s" => "sales_order_payment"],
+                    'main_table.entity_id = s.parent_id',
+                    array('method')
+                )
+                ->where('s.method = ?',PortmonePreAuthorization::METHOD_CODE );
+            $collection->setOrder(
+                'created_at',
+                'desc'
+            );
 
             if ($collection->getSize()) {
                 foreach ($collection as $item) {
