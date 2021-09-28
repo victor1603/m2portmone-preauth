@@ -1,0 +1,69 @@
+directive @doc(description: String="") on QUERY
+    | MUTATION
+    | FIELD
+    | FRAGMENT_DEFINITION
+    | FRAGMENT_SPREAD
+    | INLINE_FRAGMENT
+    | SCHEMA
+    | SCALAR
+    | OBJECT
+    | FIELD_DEFINITION
+    | ARGUMENT_DEFINITION
+    | INTERFACE
+    | UNION
+    | ENUM
+    | ENUM_VALUE
+    | INPUT_OBJECT
+    | INPUT_FIELD_DEFINITION
+directive @resolver(class: String) on FIELD_DEFINITION
+directive @cache(cacheable: Boolean) on FIELD_DEFINITION
+
+type Query {
+    getorder(order_id: String!): OrderViewOutput
+    @resolver(class: "\\CodeCustom\\PortmonePreAuthorization\\Model\\Resolver\\OrderView")
+
+    get_payment_url(order: String!, customer: String!): PortmonePaymentLink
+    @resolver(class: "\\CodeCustom\\PortmonePreAuthorization\\Model\\Resolver\\PaymentUrl")
+}
+
+type OrderViewOutput {
+    increment_id: String
+    grand_total: Float
+    currency_code: String
+    created_at: String
+    shipping_city: String
+    shipping_street: String
+    payment: String
+    customer_firstname: String
+    customer_lastname: String
+    customer_telephone: String
+    items: [OrderProductItems]
+    payment_url: String
+}
+
+type OrderProductItems {
+    sku: String
+    image: String
+    name: String
+    qty: Int
+    price: Float
+}
+
+
+type Order {
+    payment_extension_data: paymentData
+}
+
+type paymentData {
+    redirect_url: String
+    html_data: String
+    payment_method: String
+}
+
+type CustomerOrder {
+    portmone_payment_data: PortmonePaymentLink @resolver(class: "\\CodeCustom\\PortmonePreAuthorization\\Model\\Resolver\\CustomerOrder")
+}
+
+type PortmonePaymentLink {
+    payment_url: String
+}

@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Cron:etc/crontab.xsd">
+    <group id="portmone_preauthorization">
+        <job name="portmone_postauth_confirm" instance="CodeCustom\PortmonePreAuthorization\Cron\Confirm" method="execute">
+            <config_path>portmone_post_auth/cron/condition_confirm</config_path>
+        </job>
+        <job name="portmone_postauth_cancel" instance="CodeCustom\PortmonePreAuthorization\Cron\Cancel" method="execute">
+            <config_path>portmone_post_auth/cron/condition_cancel</config_path>
+        </job>
+    </group>
+</config>

@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <payment>
+            <portmone_pre_authorization_payment>
+                <active>0</active>
+                <title>Portmone Pre-authorization</title>
+                <order_status>pending</order_status>
+                <payment_success_order_status>processing</payment_success_order_status>
+                <payment_error_order_status>pending</payment_error_order_status>
+                <payment_action>true</payment_action>
+                <test>1</test>
+                <model>CodeCustom\PortmonePreAuthorization\Model\PortmonePreAuthorization</model>
+                <group>offline</group>
+                <action_url>https://www.portmone.com.ua/gateway/</action_url>
+            </portmone_pre_authorization_payment>
+        </payment>
+        <portmone_post_auth>
+            <cron>
+                <condition_confirm>* * * * *</condition_confirm>
+                <condition_cancel>* * * * *</condition_cancel>
+            </cron>
+        </portmone_post_auth>
+    </default>
+</config>

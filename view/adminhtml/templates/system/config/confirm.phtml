@@ -1,0 +1,40 @@
+<?php /* @var $block \CodeCustom\PortmonePreAuthorization\Block\System\Config\Confirm */ ?>
+<script>
+    require([
+        'jquery',
+        'Magento_Ui/js/modal/alert'
+    ], function ($, alert) {
+        function confirm() {
+            if ( $('#portmone_post_auth_confirm_portmone_confirm_order_inc_id').val() == "") {
+                alert({ content:'Plese choose order from select' });
+                return false;
+            }
+
+            new Ajax.Request('<?php /* @escapeNotVerified */ echo $block->getAjaxSyncUrl() ?>', {
+                asynchronous:   true,
+                parameters:    {
+                    increment_id: $('#portmone_post_auth_confirm_portmone_confirm_order_inc_id').val()
+                },
+                dataType: "JSON",
+                onComplete: function (xhr) {
+                    var response = JSON.parse(xhr.responseText);
+                    console.log(response);
+                    if (response.error_code > 0) {
+                        alert({ content: response.error_message});
+                    } else {
+                        alert({ content: "Success response from Portmone, payment status: " + response.status});
+                    }
+                },
+                onFailure: function (response) {
+                    alert({ content:'Error, please try latter'});
+                },
+            });
+        }
+
+        $('#confirm_button').click(function () {
+            confirm();
+        });
+    });
+</script>
+
+<?php echo $block->getButtonHtml(); ?>
