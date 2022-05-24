@@ -127,8 +127,8 @@ class Transport
             $redirectUrl = null;
         }
 
-        if ($result && isset($result['location'])) {
-            $redirectUrl = $result['location'];
+        if ($result && isset($result['Location'])) {
+            $redirectUrl = $result['Location'];
         }
 
         return $redirectUrl;
