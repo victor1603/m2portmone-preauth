@@ -39,6 +39,8 @@ type OrderViewOutput {
     customer_telephone: String
     items: [OrderProductItems]
     payment_url: String
+    receipt_bonus_amount: String
+    cart_base_bonus: String
 }
 
 type OrderProductItems {

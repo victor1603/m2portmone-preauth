@@ -106,7 +106,9 @@ class OrderView implements ResolverInterface
             'items' => $this->getOrderItems($order),
             'payment_url' => $order->getPayment()->getMethod() == PortmonePreAuthorization::METHOD_CODE
                 ? $this->portmoneLink->getPaymentLink($order)
-                : null
+                : null,
+            'receipt_bonus_amount' => $order->getData('receipt_bonus_amount') ?: '0',
+            'cart_base_bonus' => $order->getData('cart_base_bonus') ?: '0'
         ];
     }
 
