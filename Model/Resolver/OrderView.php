@@ -99,6 +99,7 @@ class OrderView implements ResolverInterface
             'shipping_street' => is_array($order->getShippingAddress()->getStreet())
                 ? implode(',', $order->getShippingAddress()->getStreet())
                 : "",
+            'shipping_amount' => $order->getShippingAmount(),
             'payment' => $order->getPayment()->getMethodInstance()->getTitle(),
             'customer_firstname' => $order->getShippingAddress()->getFirstname(),
             'customer_lastname' => $order->getShippingAddress()->getLastname(),

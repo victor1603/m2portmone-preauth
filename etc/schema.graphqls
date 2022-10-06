@@ -33,6 +33,7 @@ type OrderViewOutput {
     created_at: String
     shipping_city: String
     shipping_street: String
+    shipping_amount: String
     payment: String
     customer_firstname: String
     customer_lastname: String
